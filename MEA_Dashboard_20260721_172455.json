@@ -1,0 +1,1447 @@
+{
+  "version": 1,
+  "meta": {
+    "date": "2026-07-13",
+    "operator": "관리자",
+    "memo": "TEST"
+  },
+  "meaList": [
+    {
+      "id": "mea_mriwoaoy_0icbw",
+      "name": "더카본스튜디오_WM50SDT10",
+      "conditions": {
+        "cellCount": "3",
+        "pressure": "1",
+        "temperature": "60",
+        "flowRate": "1.5"
+      },
+      "specs": {
+        "vendor": "더카본스튜디오",
+        "membrane": "Gore + E-PTFE",
+        "anodeCatalyst": "IrSnO2/TiO2",
+        "anodeLoading": "0.65",
+        "cathodeCatalyst": "Pt/C",
+        "cathodeLoading": "0.2",
+        "membraneThickness": "80",
+        "note": "Anode 함량 50 wt% · Cathode 함량 50 wt%",
+        "fabricationDate": "",
+        "activeArea": "100",
+        "anodePtl": "",
+        "cathodeGdl": ""
+      },
+      "status": "대기",
+      "cellDesign": {
+        "v": 3,
+        "symmetry": true,
+        "order": [
+          "bpA",
+          "meshA",
+          "ptlA",
+          "gasketA",
+          "subA",
+          "catA",
+          "mem",
+          "catC",
+          "subC",
+          "gasketC",
+          "ptlC",
+          "meshC",
+          "bpC"
+        ],
+        "hidden": {},
+        "slots": {
+          "bpA": {
+            "th": 3000,
+            "groove": 200,
+            "w": 70
+          },
+          "meshA": {
+            "th": 550,
+            "w": 61
+          },
+          "ptlA": {
+            "kind": "PTL",
+            "ptlType": "Felt",
+            "th": 350,
+            "w": 57
+          },
+          "gasketA": {
+            "th": 1700,
+            "opening": 66,
+            "outer": 70
+          },
+          "subA": {
+            "th": 200,
+            "opening": 50,
+            "outer": 70
+          },
+          "catA": {
+            "th": 10,
+            "w": 50
+          },
+          "mem": {
+            "th": 80,
+            "w": 60
+          },
+          "catC": {
+            "th": 10,
+            "w": 50
+          },
+          "subC": {
+            "th": 200,
+            "opening": 50,
+            "outer": 70
+          },
+          "gasketC": {
+            "th": 1700,
+            "opening": 66,
+            "outer": 70
+          },
+          "ptlC": {
+            "kind": "PTL",
+            "ptlType": "Felt",
+            "th": 350,
+            "w": 57
+          },
+          "meshC": {
+            "th": 550,
+            "w": 61
+          },
+          "bpC": {
+            "th": 3000,
+            "groove": 200,
+            "w": 70
+          }
+        },
+        "targets": {
+          "pitch": 0,
+          "compression": 15,
+          "stackCount": 20
+        }
+      }
+    },
+    {
+      "id": "mea_mriwoaoy_c5g0u",
+      "name": "더카본스튜디오_WM50SDN15",
+      "conditions": {},
+      "specs": {
+        "vendor": "더카본스튜디오",
+        "membrane": "Nafion115",
+        "anodeCatalyst": "IrSnO2/TiO2",
+        "anodeLoading": "0.65",
+        "cathodeCatalyst": "Pt/C",
+        "cathodeLoading": "0.2",
+        "membraneThickness": "127",
+        "note": "Anode 함량 50 wt% · Cathode 함량 50 wt%",
+        "fabricationDate": "",
+        "activeArea": "100",
+        "anodePtl": "",
+        "cathodeGdl": ""
+      },
+      "status": "대기"
+    },
+    {
+      "id": "mea_mriwoaoy_iof7c",
+      "name": "비나텍_라이트브릿지 SAMPLE / 260204-26B20",
+      "conditions": {},
+      "specs": {
+        "vendor": "비나텍",
+        "membrane": "Gore",
+        "anodeCatalyst": "IrO2/Ru",
+        "anodeLoading": "0.5",
+        "cathodeCatalyst": "Pt/C",
+        "cathodeLoading": "0.3",
+        "membraneThickness": "80",
+        "note": "수량 5 · 1-Cell 장비 260204",
+        "fabricationDate": "",
+        "activeArea": "100",
+        "anodePtl": "",
+        "cathodeGdl": ""
+      },
+      "status": "대기",
+      "layers": [
+        {
+          "id": "layer_mrj0t7y1_oz7yo",
+          "name": "Layer 1",
+          "material": "",
+          "thickness": 50
+        },
+        {
+          "id": "layer_mrj0t96l_z6amz",
+          "name": "Layer 2",
+          "material": "",
+          "thickness": 50
+        },
+        {
+          "id": "layer_mrk6pddp_z5vc2",
+          "name": "Layer 3",
+          "material": "",
+          "thickness": 50,
+          "width": 100
+        },
+        {
+          "id": "layer_mrk6pdr5_nitdn",
+          "name": "Layer 4",
+          "material": "",
+          "thickness": 50,
+          "width": 100
+        },
+        {
+          "id": "layer_mrk6pdzg_xgace",
+          "name": "Layer 5",
+          "material": "",
+          "thickness": 50,
+          "width": 100
+        },
+        {
+          "id": "layer_mrk6pe6e_2a43u",
+          "name": "Layer 6",
+          "material": "",
+          "thickness": 50,
+          "width": 100
+        },
+        {
+          "id": "layer_mrk6pelo_bbgz1",
+          "name": "Layer 7",
+          "material": "",
+          "thickness": 50,
+          "width": 100
+        }
+      ],
+      "cellDesign": {
+        "symmetry": true,
+        "order": [
+          "bpA",
+          "meshA",
+          "ptlA",
+          "xmrkg3w16_daerm",
+          "gasketA",
+          "subA",
+          "catA",
+          "mem",
+          "catC",
+          "subC",
+          "gasketC",
+          "xmrkg3w16_jjdfl",
+          "ptlC",
+          "meshC",
+          "bpC"
+        ],
+        "hidden": {},
+        "slots": {
+          "bpA": {
+            "th": 3000,
+            "groove": 200,
+            "w": 70
+          },
+          "meshA": {
+            "th": 550,
+            "w": 60
+          },
+          "ptlA": {
+            "kind": "PTL",
+            "ptlType": "Felt",
+            "th": 350,
+            "w": 57
+          },
+          "gasketA": {
+            "th": 1700,
+            "opening": 57,
+            "outer": 70
+          },
+          "subA": {
+            "th": 200,
+            "opening": 50,
+            "outer": 66
+          },
+          "catA": {
+            "th": 10,
+            "w": 50
+          },
+          "mem": {
+            "th": 80,
+            "w": 60
+          },
+          "catC": {
+            "th": 10,
+            "w": 50
+          },
+          "subC": {
+            "th": 200,
+            "opening": 50,
+            "outer": 66
+          },
+          "gasketC": {
+            "th": 1700,
+            "opening": 57,
+            "outer": 70
+          },
+          "ptlC": {
+            "kind": "PTL",
+            "ptlType": "Felt",
+            "th": 350,
+            "w": 57
+          },
+          "meshC": {
+            "th": 550,
+            "w": 60
+          },
+          "bpC": {
+            "th": 3000,
+            "groove": 200,
+            "w": 70
+          },
+          "xmrkg3w16_daerm": {
+            "label": "PTL 2",
+            "th": 350,
+            "w": 57,
+            "custom": true,
+            "pairKey": "xmrkg3w16_jjdfl"
+          },
+          "xmrkg3w16_jjdfl": {
+            "label": "PTL 2",
+            "th": 350,
+            "w": 57,
+            "custom": true,
+            "pairKey": "xmrkg3w16_daerm"
+          }
+        },
+        "targets": {
+          "pitch": 0,
+          "compression": 15,
+          "stackCount": 20
+        }
+      }
+    },
+    {
+      "id": "mea_mriwoaoy_ds250",
+      "name": "비나텍_ELY SAMPLE / 250415-25D17",
+      "conditions": {},
+      "specs": {
+        "vendor": "비나텍",
+        "membrane": "고어",
+        "note": "수량 3",
+        "fabricationDate": "",
+        "activeArea": "100",
+        "membraneThickness": "80",
+        "anodeCatalyst": "IrO2/Ru",
+        "anodeLoading": "0.5",
+        "cathodeCatalyst": "Pt/C",
+        "cathodeLoading": "0.3",
+        "anodePtl": "",
+        "cathodeGdl": ""
+      },
+      "status": "대기"
+    },
+    {
+      "id": "mea_mriwoaoy_whzuk",
+      "name": "비나텍_ELY SAMPLE / 250513-25F11",
+      "conditions": {},
+      "specs": {
+        "vendor": "비나텍",
+        "membrane": "고어",
+        "note": "수량 2 · 작년 샘플, 촉매 정보 요청 필요",
+        "fabricationDate": "",
+        "activeArea": "100",
+        "membraneThickness": "",
+        "anodeCatalyst": "IrO2/Ru",
+        "anodeLoading": "0.5",
+        "cathodeCatalyst": "Pt/C",
+        "cathodeLoading": "0.3",
+        "anodePtl": "",
+        "cathodeGdl": ""
+      },
+      "status": "대기"
+    },
+    {
+      "id": "mea_mriwoaoy_zwhkx",
+      "name": "HEMT_라이트브릿지 3-Layer",
+      "conditions": {},
+      "specs": {
+        "vendor": "HEMT",
+        "membrane": "PFSA 막/강화막 (자체공급막)",
+        "anodeCatalyst": "IrO2/TiO₂",
+        "cathodeCatalyst": "Pt/C",
+        "membraneThickness": "80",
+        "note": "수량 10 · 자체 공급 막 · 로딩량/함량 요청 필요",
+        "fabricationDate": "",
+        "activeArea": "100",
+        "anodeLoading": "0.5",
+        "cathodeLoading": "0.5",
+        "anodePtl": "",
+        "cathodeGdl": ""
+      },
+      "status": "대기"
+    },
+    {
+      "id": "mea_mriwoaoz_fzvyu",
+      "name": "미확인(웨스피 예상)_PTL 부착 sample",
+      "conditions": {},
+      "specs": {
+        "vendor": "미확인/웨스피 예상",
+        "note": "수량 2 · 1EA는 PTL 한쪽만"
+      },
+      "status": "보류"
+    },
+    {
+      "id": "mea_mriwoaoy_u9qzw",
+      "name": "웨스피_고어",
+      "conditions": {},
+      "specs": {
+        "vendor": "웨스피",
+        "membrane": "고어",
+        "note": "수량 500 · 상세 정보 없음"
+      },
+      "status": "보류"
+    },
+    {
+      "id": "mea_mriwoaoz_wigyy",
+      "name": "하이스케이프_고어막O E-type",
+      "conditions": {},
+      "specs": {
+        "vendor": "하이스케이프",
+        "membrane": "고어",
+        "anodePtl": "PTL 부착 (Anode쪽)",
+        "note": "수량 2 · sub-gasket O"
+      },
+      "status": "보류"
+    },
+    {
+      "id": "mea_mriwoaoy_nbzbq",
+      "name": "하이스케이프_고어막X D-type",
+      "conditions": {},
+      "specs": {
+        "vendor": "하이스케이프",
+        "membrane": "고어",
+        "anodePtl": "PTL 부착 (Anode쪽)",
+        "note": "수량 1 · sub-gasket X"
+      },
+      "status": "보류"
+    },
+    {
+      "id": "mea_mriwoaoy_souka",
+      "name": "보야스에너지_20250619",
+      "conditions": {},
+      "specs": {
+        "vendor": "보야스에너지",
+        "membrane": "고어",
+        "anodeCatalyst": "IrO2 (100%)",
+        "cathodeCatalyst": "Pt/C (H)",
+        "note": "수량 1 · 상세 정보 없음"
+      },
+      "status": "보류"
+    }
+  ],
+  "selectedMeaId": "mea_mriwoaoy_0icbw",
+  "experiments": [
+    {
+      "id": "exp_mrtvij6a_h7gcj",
+      "name": "Experiment 1",
+      "type": "iv",
+      "meaId": "mea_mriwoaoy_0icbw",
+      "meaName": "더카본스튜디오_WM50SDT10",
+      "date": "2026-07-13",
+      "operator": "관리자",
+      "memo": "TEST",
+      "conditions": {},
+      "specs": {
+        "vendor": "더카본스튜디오",
+        "membrane": "Gore + E-PTFE",
+        "anodeCatalyst": "IrSnO2/TiO2",
+        "anodeLoading": "0.65",
+        "cathodeCatalyst": "Pt/C",
+        "cathodeLoading": "0.2",
+        "membraneThickness": "80",
+        "note": "Anode 함량 50 wt% · Cathode 함량 50 wt%",
+        "fabricationDate": "",
+        "activeArea": "100",
+        "anodePtl": "",
+        "cathodeGdl": ""
+      },
+      "data": [
+        {
+          "time": "00:00:14",
+          "elapsedSec": 14,
+          "temperature": 40,
+          "voltage": 5.4,
+          "current": 120,
+          "currentDensity": 1.2,
+          "cellVoltage": null
+        },
+        {
+          "time": "00:00:19",
+          "elapsedSec": 19,
+          "temperature": 40,
+          "voltage": 5.4,
+          "current": 130,
+          "currentDensity": 1.3,
+          "cellVoltage": null
+        },
+        {
+          "time": "00:01:33",
+          "elapsedSec": 93,
+          "temperature": 40,
+          "voltage": 5.6,
+          "current": 133,
+          "currentDensity": 1.33,
+          "cellVoltage": null
+        },
+        {
+          "time": "00:01:39",
+          "elapsedSec": 99,
+          "temperature": 40,
+          "voltage": 5.8,
+          "current": 133,
+          "currentDensity": 1.33,
+          "cellVoltage": null
+        },
+        {
+          "time": "00:01:43",
+          "elapsedSec": 103,
+          "temperature": 40,
+          "voltage": 5.8,
+          "current": 135,
+          "currentDensity": 1.35,
+          "cellVoltage": null
+        },
+        {
+          "time": "00:01:47",
+          "elapsedSec": 107,
+          "temperature": 40,
+          "voltage": 5.8,
+          "current": 135,
+          "currentDensity": 1.35,
+          "cellVoltage": null
+        }
+      ],
+      "savedAt": "2026-07-20T23:46:25.042Z"
+    },
+    {
+      "id": "exp_mru6h2wp_hig6z",
+      "name": "Experiment 2",
+      "type": "iv",
+      "meaId": "mea_mriwoaoy_0icbw",
+      "meaName": "더카본스튜디오_WM50SDT10",
+      "date": "2026-07-13",
+      "operator": "관리자",
+      "memo": "TEST",
+      "conditions": {
+        "cellCount": "3",
+        "pressure": "1",
+        "temperature": "50",
+        "flowRate": "1.5"
+      },
+      "specs": {
+        "vendor": "더카본스튜디오",
+        "membrane": "Gore + E-PTFE",
+        "anodeCatalyst": "IrSnO2/TiO2",
+        "anodeLoading": "0.65",
+        "cathodeCatalyst": "Pt/C",
+        "cathodeLoading": "0.2",
+        "membraneThickness": "80",
+        "note": "Anode 함량 50 wt% · Cathode 함량 50 wt%",
+        "fabricationDate": "",
+        "activeArea": "100",
+        "anodePtl": "",
+        "cathodeGdl": ""
+      },
+      "data": [
+        {
+          "time": "00:00:01",
+          "elapsedSec": 1,
+          "temperature": 50,
+          "voltage": 4.5,
+          "current": 7.5,
+          "currentDensity": 0.075,
+          "cellVoltage": 1.5,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:00:10",
+          "elapsedSec": 10,
+          "temperature": 50,
+          "voltage": 4.8,
+          "current": 44.5,
+          "currentDensity": 0.445,
+          "cellVoltage": 1.5999999999999999,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:00:36",
+          "elapsedSec": 36,
+          "temperature": 50,
+          "voltage": 4.9,
+          "current": 57.4,
+          "currentDensity": 0.574,
+          "cellVoltage": 1.6333333333333335,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:00:53",
+          "elapsedSec": 53,
+          "temperature": 50,
+          "voltage": 5,
+          "current": 72.7,
+          "currentDensity": 0.727,
+          "cellVoltage": 1.6666666666666667,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:01:05",
+          "elapsedSec": 65,
+          "temperature": 50,
+          "voltage": 5.1,
+          "current": 91.4,
+          "currentDensity": 0.914,
+          "cellVoltage": 1.7,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:01:22",
+          "elapsedSec": 82,
+          "temperature": 50,
+          "voltage": 5.2,
+          "current": 113.9,
+          "currentDensity": 1.139,
+          "cellVoltage": 1.7333333333333334,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:01:36",
+          "elapsedSec": 96,
+          "temperature": 50,
+          "voltage": 5.3,
+          "current": 132,
+          "currentDensity": 1.32,
+          "cellVoltage": 1.7666666666666666,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:01:53",
+          "elapsedSec": 113,
+          "temperature": 50,
+          "voltage": 5.4,
+          "current": 147.6,
+          "currentDensity": 1.476,
+          "cellVoltage": 1.8,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:02:29",
+          "elapsedSec": 149,
+          "temperature": 50,
+          "voltage": 5.5,
+          "current": 170,
+          "currentDensity": 1.7,
+          "cellVoltage": 1.8333333333333333,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:02:45",
+          "elapsedSec": 165,
+          "temperature": 50,
+          "voltage": 5.6,
+          "current": 186.6,
+          "currentDensity": 1.8659999999999999,
+          "cellVoltage": 1.8666666666666665,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:03:04",
+          "elapsedSec": 184,
+          "temperature": 50,
+          "voltage": 5.7,
+          "current": 200.7,
+          "currentDensity": 2.0069999999999997,
+          "cellVoltage": 1.9000000000000001,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:13:43",
+          "elapsedSec": 823,
+          "temperature": 50,
+          "voltage": 5.679,
+          "current": 190,
+          "currentDensity": 1.9,
+          "cellVoltage": 1.893,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:14:01",
+          "elapsedSec": 841,
+          "temperature": 50,
+          "voltage": 5.4,
+          "current": 145,
+          "currentDensity": 1.45,
+          "cellVoltage": 1.8,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        }
+      ],
+      "savedAt": "2026-07-21T04:53:13.081Z"
+    },
+    {
+      "id": "exp_mru7yp54_xfop3",
+      "name": "Experiment 3",
+      "type": "iv",
+      "meaId": "mea_mriwoaoy_0icbw",
+      "meaName": "더카본스튜디오_WM50SDT10",
+      "date": "2026-07-13",
+      "operator": "관리자",
+      "memo": "TEST",
+      "conditions": {
+        "cellCount": "3",
+        "pressure": "1",
+        "temperature": "50",
+        "flowRate": "1.5"
+      },
+      "specs": {
+        "vendor": "더카본스튜디오",
+        "membrane": "Gore + E-PTFE",
+        "anodeCatalyst": "IrSnO2/TiO2",
+        "anodeLoading": "0.65",
+        "cathodeCatalyst": "Pt/C",
+        "cathodeLoading": "0.2",
+        "membraneThickness": "80",
+        "note": "Anode 함량 50 wt% · Cathode 함량 50 wt%",
+        "fabricationDate": "",
+        "activeArea": "100",
+        "anodePtl": "",
+        "cathodeGdl": ""
+      },
+      "data": [
+        {
+          "time": "00:00:16",
+          "elapsedSec": 16,
+          "temperature": 50,
+          "voltage": 4.504,
+          "current": 7.8,
+          "currentDensity": 0.078,
+          "cellVoltage": 1.5013333333333332,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:02:07",
+          "elapsedSec": 127,
+          "temperature": 50,
+          "voltage": 5.276,
+          "current": 121,
+          "currentDensity": 1.21,
+          "cellVoltage": 1.7586666666666666,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:03:51",
+          "elapsedSec": 231,
+          "temperature": 50,
+          "voltage": 5.269,
+          "current": 122,
+          "currentDensity": 1.22,
+          "cellVoltage": 1.721,
+          "cellVoltages": [
+            1.724,
+            1.707,
+            1.732
+          ]
+        },
+        {
+          "time": "00:05:30",
+          "elapsedSec": 330,
+          "temperature": 50,
+          "voltage": 5.713,
+          "current": 201,
+          "currentDensity": 2.01,
+          "cellVoltage": 1.8550000000000002,
+          "cellVoltages": [
+            1.854,
+            1.838,
+            1.873
+          ]
+        },
+        {
+          "time": "00:09:10",
+          "elapsedSec": 550,
+          "temperature": 50,
+          "voltage": 5.44,
+          "current": 153.1,
+          "currentDensity": 1.531,
+          "cellVoltage": 1.774333333333333,
+          "cellVoltages": [
+            1.776,
+            1.758,
+            1.789
+          ]
+        },
+        {
+          "time": "00:10:51",
+          "elapsedSec": 651,
+          "temperature": 50,
+          "voltage": 5.4,
+          "current": 143.5,
+          "currentDensity": 1.435,
+          "cellVoltage": 1.7523333333333333,
+          "cellVoltages": [
+            1.754,
+            1.734,
+            1.769
+          ]
+        },
+        {
+          "time": "00:16:22",
+          "elapsedSec": 982,
+          "temperature": 50,
+          "voltage": 5.555,
+          "current": 172,
+          "currentDensity": 1.72,
+          "cellVoltage": 1.8023333333333333,
+          "cellVoltages": [
+            1.8,
+            1.785,
+            1.822
+          ]
+        },
+        {
+          "time": "00:19:35",
+          "elapsedSec": 1175,
+          "temperature": 50,
+          "voltage": 5.643,
+          "current": 181.5,
+          "currentDensity": 1.815,
+          "cellVoltage": 1.825,
+          "cellVoltages": [
+            1.823,
+            1.811,
+            1.841
+          ]
+        },
+        {
+          "time": "00:21:15",
+          "elapsedSec": 1275,
+          "temperature": 50,
+          "voltage": 5.695,
+          "current": 190.8,
+          "currentDensity": 1.9080000000000001,
+          "cellVoltage": 1.8386666666666667,
+          "cellVoltages": [
+            1.838,
+            1.827,
+            1.851
+          ]
+        },
+        {
+          "time": "00:23:44",
+          "elapsedSec": 1424,
+          "temperature": 50,
+          "voltage": 5.525,
+          "current": 162.3,
+          "currentDensity": 1.6230000000000002,
+          "cellVoltage": 1.7926666666666666,
+          "cellVoltages": [
+            1.792,
+            1.777,
+            1.809
+          ]
+        },
+        {
+          "time": "00:25:19",
+          "elapsedSec": 1519,
+          "temperature": 50,
+          "voltage": 5.37,
+          "current": 133.9,
+          "currentDensity": 1.339,
+          "cellVoltage": 1.7506666666666666,
+          "cellVoltages": [
+            1.751,
+            1.735,
+            1.766
+          ]
+        },
+        {
+          "time": "00:26:47",
+          "elapsedSec": 1607,
+          "temperature": 50,
+          "voltage": 5.325,
+          "current": 124.4,
+          "currentDensity": 1.244,
+          "cellVoltage": 1.737,
+          "cellVoltages": [
+            1.738,
+            1.722,
+            1.751
+          ]
+        },
+        {
+          "time": "00:27:48",
+          "elapsedSec": 1668,
+          "temperature": 50,
+          "voltage": 5.269,
+          "current": 114.8,
+          "currentDensity": 1.148,
+          "cellVoltage": 1.723,
+          "cellVoltages": [
+            1.723,
+            1.709,
+            1.737
+          ]
+        },
+        {
+          "time": "00:29:08",
+          "elapsedSec": 1748,
+          "temperature": 50,
+          "voltage": 5.215,
+          "current": 105.3,
+          "currentDensity": 1.053,
+          "cellVoltage": 1.7083333333333333,
+          "cellVoltages": [
+            1.708,
+            1.696,
+            1.721
+          ]
+        },
+        {
+          "time": "00:29:52",
+          "elapsedSec": 1792,
+          "temperature": 50,
+          "voltage": 5.167,
+          "current": 95.9,
+          "currentDensity": 0.9590000000000001,
+          "cellVoltage": 1.6926666666666668,
+          "cellVoltages": [
+            1.693,
+            1.681,
+            1.704
+          ]
+        },
+        {
+          "time": "00:30:51",
+          "elapsedSec": 1851,
+          "temperature": 50,
+          "voltage": 5.12,
+          "current": 86.4,
+          "currentDensity": 0.8640000000000001,
+          "cellVoltage": 1.6786666666666665,
+          "cellVoltages": [
+            1.681,
+            1.669,
+            1.686
+          ]
+        },
+        {
+          "time": "00:32:07",
+          "elapsedSec": 1927,
+          "temperature": 50,
+          "voltage": 5.069,
+          "current": 76.9,
+          "currentDensity": 0.769,
+          "cellVoltage": 1.6660000000000001,
+          "cellVoltages": [
+            1.668,
+            1.657,
+            1.673
+          ]
+        },
+        {
+          "time": "00:32:54",
+          "elapsedSec": 1974,
+          "temperature": 50,
+          "voltage": 5.011,
+          "current": 67.4,
+          "currentDensity": 0.674,
+          "cellVoltage": 1.6513333333333333,
+          "cellVoltages": [
+            1.652,
+            1.644,
+            1.658
+          ]
+        },
+        {
+          "time": "00:33:53",
+          "elapsedSec": 2033,
+          "temperature": 50,
+          "voltage": 4.956,
+          "current": 57.9,
+          "currentDensity": 0.579,
+          "cellVoltage": 1.6349999999999998,
+          "cellVoltages": [
+            1.636,
+            1.629,
+            1.64
+          ]
+        },
+        {
+          "time": "00:35:23",
+          "elapsedSec": 2123,
+          "temperature": 50,
+          "voltage": 4.898,
+          "current": 48.4,
+          "currentDensity": 0.484,
+          "cellVoltage": 1.6186666666666667,
+          "cellVoltages": [
+            1.62,
+            1.614,
+            1.622
+          ]
+        },
+        {
+          "time": "00:36:11",
+          "elapsedSec": 2171,
+          "temperature": 50,
+          "voltage": 4.842,
+          "current": 38.9,
+          "currentDensity": 0.389,
+          "cellVoltage": 1.5990000000000002,
+          "cellVoltages": [
+            1.601,
+            1.596,
+            1.6
+          ]
+        },
+        {
+          "time": "00:37:36",
+          "elapsedSec": 2256,
+          "temperature": 50,
+          "voltage": 4.774,
+          "current": 29.4,
+          "currentDensity": 0.294,
+          "cellVoltage": 1.578,
+          "cellVoltages": [
+            1.58,
+            1.577,
+            1.577
+          ]
+        },
+        {
+          "time": "00:38:37",
+          "elapsedSec": 2317,
+          "temperature": 50,
+          "voltage": 4.686,
+          "current": 19.9,
+          "currentDensity": 0.19899999999999998,
+          "cellVoltage": 1.553,
+          "cellVoltages": [
+            1.555,
+            1.553,
+            1.551
+          ]
+        },
+        {
+          "time": "00:40:03",
+          "elapsedSec": 2403,
+          "temperature": 50,
+          "voltage": 4.584,
+          "current": 10.3,
+          "currentDensity": 0.10300000000000001,
+          "cellVoltage": 1.5210000000000001,
+          "cellVoltages": [
+            1.524,
+            1.522,
+            1.517
+          ]
+        }
+      ],
+      "savedAt": "2026-07-21T05:34:54.665Z"
+    },
+    {
+      "id": "exp_mruba6id_h9ef4",
+      "name": "Experiment 4",
+      "type": "iv",
+      "meaId": "mea_mriwoaoy_0icbw",
+      "meaName": "더카본스튜디오_WM50SDT10",
+      "date": "2026-07-13",
+      "operator": "관리자",
+      "memo": "TEST",
+      "conditions": {
+        "cellCount": "3",
+        "pressure": "1",
+        "temperature": "60",
+        "flowRate": "1.5"
+      },
+      "specs": {
+        "vendor": "더카본스튜디오",
+        "membrane": "Gore + E-PTFE",
+        "anodeCatalyst": "IrSnO2/TiO2",
+        "anodeLoading": "0.65",
+        "cathodeCatalyst": "Pt/C",
+        "cathodeLoading": "0.2",
+        "membraneThickness": "80",
+        "note": "Anode 함량 50 wt% · Cathode 함량 50 wt%",
+        "fabricationDate": "",
+        "activeArea": "100",
+        "anodePtl": "",
+        "cathodeGdl": ""
+      },
+      "data": [
+        {
+          "time": "00:03:13",
+          "elapsedSec": 193,
+          "temperature": 60,
+          "voltage": 4.48,
+          "current": 9.2,
+          "currentDensity": 0.092,
+          "cellVoltage": 1.4933333333333334,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:06:22",
+          "elapsedSec": 382,
+          "temperature": 60,
+          "voltage": 4.575,
+          "current": 18.7,
+          "currentDensity": 0.187,
+          "cellVoltage": 1.5250000000000001,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:09:15",
+          "elapsedSec": 555,
+          "temperature": 60,
+          "voltage": 4.651,
+          "current": 28.2,
+          "currentDensity": 0.282,
+          "cellVoltage": 1.5503333333333333,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:11:44",
+          "elapsedSec": 704,
+          "temperature": 60,
+          "voltage": 4.715,
+          "current": 37.7,
+          "currentDensity": 0.377,
+          "cellVoltage": 1.5716666666666665,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:15:02",
+          "elapsedSec": 902,
+          "temperature": 60,
+          "voltage": 4.779,
+          "current": 47.4,
+          "currentDensity": 0.474,
+          "cellVoltage": 1.593,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:19:13",
+          "elapsedSec": 1153,
+          "temperature": 60,
+          "voltage": 4.84,
+          "current": 57,
+          "currentDensity": 0.57,
+          "cellVoltage": 1.6133333333333333,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:24:27",
+          "elapsedSec": 1467,
+          "temperature": 60,
+          "voltage": 4.89,
+          "current": 66.6,
+          "currentDensity": 0.6659999999999999,
+          "cellVoltage": 1.63,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:26:28",
+          "elapsedSec": 1588,
+          "temperature": 60,
+          "voltage": 4.941,
+          "current": 76.1,
+          "currentDensity": 0.7609999999999999,
+          "cellVoltage": 1.647,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:29:16",
+          "elapsedSec": 1756,
+          "temperature": 60,
+          "voltage": 4.991,
+          "current": 85.7,
+          "currentDensity": 0.857,
+          "cellVoltage": 1.6636666666666666,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:33:00",
+          "elapsedSec": 1980,
+          "temperature": 60,
+          "voltage": 5.043,
+          "current": 95.3,
+          "currentDensity": 0.953,
+          "cellVoltage": 1.681,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:37:06",
+          "elapsedSec": 2226,
+          "temperature": 60,
+          "voltage": 5.095,
+          "current": 105,
+          "currentDensity": 1.05,
+          "cellVoltage": 1.6983333333333333,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:39:53",
+          "elapsedSec": 2393,
+          "temperature": 60,
+          "voltage": 5.145,
+          "current": 114.7,
+          "currentDensity": 1.147,
+          "cellVoltage": 1.7149999999999999,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:42:13",
+          "elapsedSec": 2533,
+          "temperature": 60,
+          "voltage": 5.189,
+          "current": 124.2,
+          "currentDensity": 1.242,
+          "cellVoltage": 1.7296666666666667,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:45:13",
+          "elapsedSec": 2713,
+          "temperature": 60,
+          "voltage": 5.231,
+          "current": 133.8,
+          "currentDensity": 1.338,
+          "cellVoltage": 1.7436666666666667,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:48:04",
+          "elapsedSec": 2884,
+          "temperature": 60,
+          "voltage": 5.274,
+          "current": 143.3,
+          "currentDensity": 1.433,
+          "cellVoltage": 1.758,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:50:13",
+          "elapsedSec": 3013,
+          "temperature": 60,
+          "voltage": 5.322,
+          "current": 153,
+          "currentDensity": 1.53,
+          "cellVoltage": 1.774,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "00:51:57",
+          "elapsedSec": 3117,
+          "temperature": 60,
+          "voltage": 5.366,
+          "current": 162.5,
+          "currentDensity": 1.625,
+          "cellVoltage": 1.7886666666666666,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "01:03:45",
+          "elapsedSec": 3825,
+          "temperature": 60,
+          "voltage": 5.42,
+          "current": 172,
+          "currentDensity": 1.72,
+          "cellVoltage": 1.8066666666666666,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "01:09:34",
+          "elapsedSec": 4174,
+          "temperature": 60,
+          "voltage": 5.472,
+          "current": 181.6,
+          "currentDensity": 1.8159999999999998,
+          "cellVoltage": 1.824,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "01:11:01",
+          "elapsedSec": 4261,
+          "temperature": 60,
+          "voltage": 5.518,
+          "current": 191.1,
+          "currentDensity": 1.911,
+          "cellVoltage": 1.8393333333333333,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "time": "01:12:19",
+          "elapsedSec": 4339,
+          "temperature": 60,
+          "voltage": 5.564,
+          "current": 200.6,
+          "currentDensity": 2.006,
+          "cellVoltage": 1.8546666666666667,
+          "cellVoltages": [
+            null,
+            null,
+            null
+          ]
+        }
+      ],
+      "savedAt": "2026-07-21T07:07:49.237Z"
+    }
+  ],
+  "draft": null,
+  "settings": {
+    "theme": "light",
+    "visibleSeries": {
+      "voltage": true,
+      "current": true,
+      "temperature": false,
+      "currentDensity": false,
+      "cellVoltage": false
+    },
+    "ivAxes": {
+      "x": "current",
+      "y": "voltage"
+    }
+  },
+  "seedVersion": 2
+}

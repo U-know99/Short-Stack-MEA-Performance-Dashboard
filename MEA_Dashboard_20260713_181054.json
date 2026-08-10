@@ -1,0 +1,202 @@
+{
+  "version": 1,
+  "meta": {
+    "date": "2026-07-13",
+    "operator": "관리자",
+    "memo": "TEST"
+  },
+  "meaList": [
+    {
+      "id": "mea_mriwoaoy_0icbw",
+      "name": "더카본스튜디오_WM50SDT10",
+      "conditions": {},
+      "specs": {
+        "vendor": "더카본스튜디오",
+        "membrane": "Gore + E-PTFE",
+        "anodeCatalyst": "IrSnO2/TiO2",
+        "anodeLoading": "0.65",
+        "cathodeCatalyst": "Pt/C",
+        "cathodeLoading": "0.2",
+        "membraneThickness": "80",
+        "note": "Anode 함량 50 wt% · Cathode 함량 50 wt%",
+        "fabricationDate": "",
+        "activeArea": "100",
+        "anodePtl": "",
+        "cathodeGdl": ""
+      },
+      "status": "대기"
+    },
+    {
+      "id": "mea_mriwoaoy_c5g0u",
+      "name": "더카본스튜디오_WM50SDN15",
+      "conditions": {},
+      "specs": {
+        "vendor": "더카본스튜디오",
+        "membrane": "Nafion115",
+        "anodeCatalyst": "IrSnO2/TiO2",
+        "anodeLoading": "0.65",
+        "cathodeCatalyst": "Pt/C",
+        "cathodeLoading": "0.2",
+        "membraneThickness": "127",
+        "note": "Anode 함량 50 wt% · Cathode 함량 50 wt%",
+        "fabricationDate": "",
+        "activeArea": "100",
+        "anodePtl": "",
+        "cathodeGdl": ""
+      },
+      "status": "대기"
+    },
+    {
+      "id": "mea_mriwoaoy_iof7c",
+      "name": "비나텍_라이트브릿지 SAMPLE / 260204-26B20",
+      "conditions": {},
+      "specs": {
+        "vendor": "비나텍",
+        "membrane": "Gore",
+        "anodeCatalyst": "IrO2/Ru",
+        "anodeLoading": "0.5",
+        "cathodeCatalyst": "Pt/C",
+        "cathodeLoading": "0.3",
+        "membraneThickness": "80",
+        "note": "수량 5 · 1-Cell 장비 260204",
+        "fabricationDate": "",
+        "activeArea": "100",
+        "anodePtl": "",
+        "cathodeGdl": ""
+      },
+      "status": "대기"
+    },
+    {
+      "id": "mea_mriwoaoy_ds250",
+      "name": "비나텍_ELY SAMPLE / 250415-25D17",
+      "conditions": {},
+      "specs": {
+        "vendor": "비나텍",
+        "membrane": "고어",
+        "note": "수량 3",
+        "fabricationDate": "",
+        "activeArea": "100",
+        "membraneThickness": "80",
+        "anodeCatalyst": "IrO2/Ru",
+        "anodeLoading": "0.5",
+        "cathodeCatalyst": "Pt/C",
+        "cathodeLoading": "0.3",
+        "anodePtl": "",
+        "cathodeGdl": ""
+      },
+      "status": "대기"
+    },
+    {
+      "id": "mea_mriwoaoy_whzuk",
+      "name": "비나텍_ELY SAMPLE / 250513-25F11",
+      "conditions": {},
+      "specs": {
+        "vendor": "비나텍",
+        "membrane": "고어",
+        "note": "수량 2 · 작년 샘플, 촉매 정보 요청 필요",
+        "fabricationDate": "",
+        "activeArea": "100",
+        "membraneThickness": "",
+        "anodeCatalyst": "IrO2/Ru",
+        "anodeLoading": "0.5",
+        "cathodeCatalyst": "Pt/C",
+        "cathodeLoading": "0.3",
+        "anodePtl": "",
+        "cathodeGdl": ""
+      },
+      "status": "대기"
+    },
+    {
+      "id": "mea_mriwoaoy_zwhkx",
+      "name": "HEMT_라이트브릿지 3-Layer",
+      "conditions": {},
+      "specs": {
+        "vendor": "HEMT",
+        "membrane": "PFSA 막/강화막 (자체공급막)",
+        "anodeCatalyst": "IrO2/TiO₂",
+        "cathodeCatalyst": "Pt/C",
+        "membraneThickness": "80",
+        "note": "수량 10 · 자체 공급 막 · 로딩량/함량 요청 필요",
+        "fabricationDate": "",
+        "activeArea": "100",
+        "anodeLoading": "0.5",
+        "cathodeLoading": "0.5",
+        "anodePtl": "",
+        "cathodeGdl": ""
+      },
+      "status": "대기"
+    },
+    {
+      "id": "mea_mriwoaoz_fzvyu",
+      "name": "미확인(웨스피 예상)_PTL 부착 sample",
+      "conditions": {},
+      "specs": {
+        "vendor": "미확인/웨스피 예상",
+        "note": "수량 2 · 1EA는 PTL 한쪽만"
+      },
+      "status": "보류"
+    },
+    {
+      "id": "mea_mriwoaoy_u9qzw",
+      "name": "웨스피_고어",
+      "conditions": {},
+      "specs": {
+        "vendor": "웨스피",
+        "membrane": "고어",
+        "note": "수량 500 · 상세 정보 없음"
+      },
+      "status": "보류"
+    },
+    {
+      "id": "mea_mriwoaoz_wigyy",
+      "name": "하이스케이프_고어막O E-type",
+      "conditions": {},
+      "specs": {
+        "vendor": "하이스케이프",
+        "membrane": "고어",
+        "anodePtl": "PTL 부착 (Anode쪽)",
+        "note": "수량 2 · sub-gasket O"
+      },
+      "status": "보류"
+    },
+    {
+      "id": "mea_mriwoaoy_nbzbq",
+      "name": "하이스케이프_고어막X D-type",
+      "conditions": {},
+      "specs": {
+        "vendor": "하이스케이프",
+        "membrane": "고어",
+        "anodePtl": "PTL 부착 (Anode쪽)",
+        "note": "수량 1 · sub-gasket X"
+      },
+      "status": "보류"
+    },
+    {
+      "id": "mea_mriwoaoy_souka",
+      "name": "보야스에너지_20250619",
+      "conditions": {},
+      "specs": {
+        "vendor": "보야스에너지",
+        "membrane": "고어",
+        "anodeCatalyst": "IrO2 (100%)",
+        "cathodeCatalyst": "Pt/C (H)",
+        "note": "수량 1 · 상세 정보 없음"
+      },
+      "status": "보류"
+    }
+  ],
+  "selectedMeaId": "mea_mriwoaoy_iof7c",
+  "experiments": [],
+  "draft": null,
+  "settings": {
+    "theme": "light",
+    "visibleSeries": {
+      "voltage": true,
+      "current": true,
+      "temperature": false,
+      "currentDensity": false,
+      "cellVoltage": false
+    }
+  },
+  "seedVersion": 2
+}

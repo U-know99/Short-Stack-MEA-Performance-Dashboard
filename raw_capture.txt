@@ -1,0 +1,19 @@
+AD Power HPM-300A 시리얼 캡처 - 2026-08-03 13:42:59.585665
+
+----- 시도: /dev/cu.usbserial-D200NEE6 @ 9600 bps -----
+  => 수신 바이트: 0
+
+----- 시도: /dev/cu.usbserial-D200NEE6 @ 19200 bps -----
+  => 수신 바이트: 0
+
+----- 시도: /dev/cu.usbserial-D200NEE6 @ 38400 bps -----
+  => 수신 바이트: 0
+
+----- 시도: /dev/cu.usbserial-D200NEE6 @ 4800 bps -----
+  => 수신 바이트: 0
+
+----- 시도: /dev/cu.usbserial-D200NEE6 @ 57600 bps -----
+  => 수신 바이트: 0
+
+----- 시도: /dev/cu.usbserial-D200NEE6 @ 115200 bps -----
+  => 수신 바이트: 0

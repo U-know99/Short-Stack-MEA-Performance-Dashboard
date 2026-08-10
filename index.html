@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Short Stack MEA Performance Dashboard</title>
+
+  <!-- 로컬 라이브러리 (오프라인 동작) -->
+  <link rel="stylesheet" href="libs/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="style.css?v=34" />
+</head>
+<body>
+
+  <!-- ===================== 좌측 Navigation Sidebar ===================== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <i class="bi bi-droplet-half"></i>
+      <div class="brand-text">
+        <span class="brand-title">PEMWE Lab</span>
+        <span class="brand-sub">Short Stack MEA</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-page="page-performance">
+        <i class="bi bi-speedometer2"></i><span>성능평가</span>
+      </button>
+      <button class="nav-item" data-page="page-analysis">
+        <i class="bi bi-graph-up-arrow"></i><span>데이터 분석</span>
+      </button>
+      <button class="nav-item" data-page="page-layer">
+        <i class="bi bi-layers"></i><span>Layer 설계</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <!-- Dark / Light 테마 토글 -->
+      <button id="themeToggle" class="theme-toggle" title="테마 전환">
+        <i class="bi bi-moon-stars"></i><span>Dark Mode</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===================== 메인 영역 ===================== -->
+  <main class="main">
+
+    <!-- ===================== 상단 툴바 (전체 페이지 공통) ===================== -->
+    <div class="topbar">
+      <div class="topbar-brand">
+        <i class="bi bi-droplet-half"></i> Short Stack MEA Dashboard
+      </div>
+      <div class="topbar-actions">
+        <!-- 저장: 마우스를 올리면 저장 항목 선택 드롭다운 표시 -->
+        <div class="dropdown">
+          <button class="btn btn-primary" id="btnSaveMenu">
+            <i class="bi bi-floppy"></i> 저장 <i class="bi bi-chevron-down small-chevron"></i>
+          </button>
+          <div class="dropdown-menu">
+            <button class="dropdown-item" id="btnJsonSave">
+              <i class="bi bi-database-down"></i>
+              <span>전체 저장 (JSON)<small>모든 데이터를 파일로 백업 - 다른 PC에서 불러오기 가능</small></span>
+            </button>
+            <button class="dropdown-item" id="btnSaveExp">
+              <i class="bi bi-flask"></i>
+              <span>실험 저장<small>현재 측정 데이터를 Experiment로 저장</small></span>
+            </button>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item" id="btnCsv">
+              <i class="bi bi-filetype-csv"></i>
+              <span>CSV 내보내기<small>현재 측정 데이터 표</small></span>
+            </button>
+            <button class="dropdown-item" id="btnXlsx">
+              <i class="bi bi-file-earmark-excel"></i>
+              <span>Excel(xlsx) 내보내기<small>저장된 Experiment 별 시트</small></span>
+            </button>
+            <button class="dropdown-item" id="btnPng">
+              <i class="bi bi-image"></i>
+              <span>PNG 그래프 저장<small>실시간 그래프 이미지</small></span>
+            </button>
+          </div>
+        </div>
+        <!-- 불러오기: 전체 저장 JSON 을 선택하면 동일한 대시보드 복원 -->
+        <button class="btn btn-outline" id="btnJsonLoad">
+          <i class="bi bi-folder2-open"></i> 불러오기
+        </button>
+        <input type="file" id="fileJson" accept=".json,application/json" hidden />
+        <!-- Excel 가져오기: 내보낸 xlsx 의 실험을 목록에 "추가" (덮어쓰지 않음) -->
+        <button class="btn btn-outline" id="btnXlsxLoad"
+                title="내보낸 Excel(MEA_Experiments_*.xlsx) 의 실험을 목록에 추가합니다">
+          <i class="bi bi-file-earmark-excel"></i> Excel 가져오기
+        </button>
+        <input type="file" id="fileXlsx" accept=".xlsx,.xlsm" hidden />
+      </div>
+    </div>
+
+    <!-- ============ 페이지 1 : 성능평가 ============ -->
+    <section class="page active" id="page-performance">
+
+      <!-- 상단 헤더 : 제목 + 날짜/시간/실험자/메모 -->
+      <header class="page-header card">
+        <div class="header-title">
+          <h1><i class="bi bi-speedometer2"></i> Short Stack MEA Performance Dashboard</h1>
+          <span class="header-badge" id="runStateBadge">대기 중</span>
+        </div>
+        <div class="header-meta">
+          <div class="meta-field">
+            <label><i class="bi bi-calendar3"></i> 날짜</label>
+            <input type="date" id="metaDate" />
+          </div>
+          <div class="meta-field">
+            <label><i class="bi bi-clock"></i> 현재 시간</label>
+            <input type="text" id="metaClock" readonly />
+          </div>
+          <div class="meta-field">
+            <label><i class="bi bi-person"></i> 실험자</label>
+            <input type="text" id="metaOperator" placeholder="이름 입력" />
+          </div>
+          <div class="meta-field meta-memo">
+            <label><i class="bi bi-pencil"></i> 메모</label>
+            <input type="text" id="metaMemo" placeholder="실험 메모" />
+          </div>
+        </div>
+      </header>
+
+      <!-- ---------- 평가 MEA Board (칸반보드: 평가 상태별) ---------- -->
+      <div class="card kanban-card">
+        <div class="card-title">
+          <span><i class="bi bi-kanban"></i> 평가 MEA Board</span>
+          <button class="btn btn-sm btn-primary" id="btnAddMea">＋ MEA 추가</button>
+        </div>
+        <!-- 컬럼(대기/진행중/완료/보류)과 카드는 app.js 에서 자동 생성 -->
+        <div class="kanban" id="kanbanBoard"></div>
+        <p class="hint"><i class="bi bi-info-circle"></i>
+          클릭: 실험 대상 선택 · 더블클릭/ⓘ: 정보 수정 · 드래그: 상태/순서 변경</p>
+      </div>
+
+      <!-- 2단 레이아웃 : 조건+데이터 | 그래프 -->
+      <div class="dash-grid">
+
+        <!-- ---------- 좌측 : 실험 조건 + 데이터 입력 ---------- -->
+        <div class="col-center">
+
+          <!-- 실험 조건 (선택된 MEA별로 저장) -->
+          <div class="card">
+            <div class="card-title">
+              <span><i class="bi bi-sliders"></i> 실험 조건 <small id="condMeaName" class="cond-mea-name"></small></span>
+            </div>
+            <!-- 조건 입력 필드는 app.js 의 CONDITION_FIELDS 객체 기반으로 자동 생성 -->
+            <div class="cond-grid" id="condGrid"></div>
+          </div>
+
+          <!-- 실험 제어 버튼 + 경과 시간 -->
+          <div class="card">
+            <div class="card-title">
+              <span><i class="bi bi-stopwatch"></i> 실험 제어</span>
+              <span class="elapsed" id="elapsedTime">00:00:00</span>
+            </div>
+            <!-- 실험 유형: Experiment 에 저장되어 분석 페이지에서 자동 구분 -->
+            <div class="exp-type" id="expTypeGroup">
+              <label class="exp-type-opt">
+                <input type="radio" name="expType" value="stability" checked />
+                <span><i class="bi bi-activity"></i> 안정성 (시간)</span>
+              </label>
+              <label class="exp-type-opt">
+                <input type="radio" name="expType" value="iv" />
+                <span><i class="bi bi-graph-down"></i> IV 측정 (Polarization)</span>
+              </label>
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-success" id="btnStart"><i class="bi bi-play-fill"></i> Start</button>
+              <button class="btn btn-warning" id="btnPause" disabled><i class="bi bi-pause-fill"></i> Pause</button>
+              <button class="btn btn-info" id="btnResume" disabled><i class="bi bi-skip-forward-fill"></i> Resume</button>
+              <button class="btn btn-danger" id="btnStop" disabled><i class="bi bi-stop-fill"></i> Stop</button>
+            </div>
+          </div>
+
+          <!-- 측정값 입력 -->
+          <div class="card">
+            <div class="card-title"><span><i class="bi bi-input-cursor-text"></i> 측정값 입력</span></div>
+            <div class="measure-grid">
+              <div class="meta-field">
+                <label>Temperature (℃)</label>
+                <input type="number" step="any" id="inTemperature" placeholder="ex) 80" />
+              </div>
+              <div class="meta-field">
+                <label>Voltage (V)</label>
+                <!-- 스피너 0.1V 단위 -->
+                <input type="number" step="0.1" id="inVoltage" placeholder="ex) 7.2" />
+              </div>
+              <div class="meta-field">
+                <label>Current (A)</label>
+                <input type="number" step="any" id="inCurrent" placeholder="ex) 50" />
+              </div>
+              <div class="meta-field">
+                <label>Current Density (A/cm²)</label>
+                <input type="text" id="inCurrentDensity" readonly title="전류 ÷ 활성면적 자동 계산" />
+              </div>
+              <!-- Cell Voltage: 평가 Cell 수만큼 입력칸 자동 생성
+                   각 입력에서 선이 나와 합류 → 합계(Σ)로 자동 계산 -->
+              <div class="meta-field cellv-field">
+                <label>Cell Voltage (V) <small class="cellv-hint" id="cellvHint"></small></label>
+                <div class="cellv-inputs" id="cellvInputs"></div>
+                <!-- 합류선 SVG + 합계 readout (app.js 에서 렌더링) -->
+                <div class="cellv-merge" id="cellvMerge"></div>
+              </div>
+              <!-- 전체 셀 전압 (AC Clamp meter 측정값) -->
+              <div class="meta-field cellv-field">
+                <label>전체 Cell Voltage (AC Clamp meter, V)</label>
+                <input type="number" step="0.01" id="inTotalCellVoltage" placeholder="ex) 6.30 (클램프미터 측정)" />
+              </div>
+              <div class="meta-field add-btn-field">
+                <label>&nbsp;</label>
+                <button class="btn btn-primary" id="btnAddRow" disabled>
+                  <i class="bi bi-plus-circle"></i> 데이터 추가
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 데이터 테이블 -->
+          <div class="card">
+            <div class="card-title">
+              <span><i class="bi bi-table"></i> 측정 데이터</span>
+              <div class="btn-row-sm">
+                <button class="btn btn-sm btn-outline" id="btnDeleteRow" title="마지막 측정 행 삭제"><i class="bi bi-arrow-counterclockwise"></i> 마지막 행</button>
+                <button class="btn btn-sm btn-outline-danger" id="btnClearRows"><i class="bi bi-trash3"></i> 전체 삭제</button>
+              </div>
+            </div>
+            <p class="hint" style="margin:0 0 8px"><i class="bi bi-info-circle"></i> 행을 클릭하면 값을 수정할 수 있습니다</p>
+            <div class="table-wrap" id="tableWrap">
+              <table id="dataTable">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Time</th>
+                    <th>Temp (℃)</th>
+                    <th>Voltage (V)</th>
+                    <th>Current (A)</th>
+                    <th>C.D. (A/cm²)</th>
+                    <th>Cell V (V)</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="dataTbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 저장된 Experiment 목록 -->
+          <div class="card">
+            <div class="card-title">
+              <span><i class="bi bi-archive"></i> 저장된 Experiment</span>
+            </div>
+            <ul class="exp-list" id="expList"></ul>
+          </div>
+
+        </div>
+
+        <!-- ---------- 우측 : 실시간 그래프 + IV Curve ---------- -->
+        <div class="col-right">
+          <div class="card chart-card">
+            <div class="card-title"><span><i class="bi bi-graph-up"></i> 실시간 그래프</span></div>
+            <!-- Y축 표시 항목 선택 체크박스 (chart.js 에서 자동 생성) -->
+            <div class="series-checks" id="seriesChecks"></div>
+            <div class="chart-wrap">
+              <canvas id="mainChart"></canvas>
+            </div>
+          </div>
+
+          <!-- IV Curve: 현재 측정 데이터를 원하는 축으로 실시간 표시 -->
+          <div class="card">
+            <div class="card-title">
+              <span><i class="bi bi-graph-down"></i> IV Curve</span>
+              <button class="btn btn-sm btn-outline" id="btnIvPng" title="IV 그래프 PNG 저장">
+                <i class="bi bi-image"></i> PNG
+              </button>
+            </div>
+            <!-- X/Y축 선택 (chart.js 에서 옵션 자동 생성, 선택 즉시 반영) -->
+            <div class="axis-selects">
+              <label>X축 <select id="ivAxisX"></select></label>
+              <label>Y축 <select id="ivAxisY"></select></label>
+            </div>
+            <div class="chart-wrap iv-chart-wrap">
+              <canvas id="ivChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 페이지 2 : 데이터 분석 ============ -->
+    <section class="page" id="page-analysis">
+      <header class="page-header card">
+        <div class="header-title"><h1><i class="bi bi-graph-up-arrow"></i> Data Analysis</h1></div>
+      </header>
+
+      <div class="analysis-grid">
+        <!-- 좌측 : Cell 수 필터 + 비교 대상 선택 -->
+        <div class="card">
+          <div class="card-title"><span><i class="bi bi-funnel"></i> Cell 수 필터</span></div>
+          <!-- 저장된 Experiment 의 Cell 수로부터 자동 생성 -->
+          <div class="cell-filter" id="cellFilter"></div>
+
+          <div class="card-title cmp-list-title"><span><i class="bi bi-list-check"></i> 비교할 Experiment</span></div>
+          <ul class="cmp-exp-list" id="cmpExpList"></ul>
+          <p class="hint"><i class="bi bi-info-circle"></i> 같은 Cell 수끼리 필터링해 성능을 비교하세요</p>
+        </div>
+
+        <!-- 우측 : 비교 그래프 (자유 비교 / Polarization 탭) -->
+        <div class="col-analysis-right">
+          <div class="card">
+            <div class="card-title">
+              <span><i class="bi bi-graph-up"></i> 비교 그래프</span>
+              <div class="cmp-title-right">
+                <!-- 그래프 모드 탭 -->
+                <div class="chart-tabs">
+                  <button class="chart-tab active" data-mode="free">자유 비교</button>
+                  <button class="chart-tab" data-mode="polar">Polarization Curve</button>
+                </div>
+                <button class="btn btn-sm btn-outline" id="btnCmpPng" title="비교 그래프 PNG 저장">
+                  <i class="bi bi-image"></i> PNG
+                </button>
+              </div>
+            </div>
+            <!-- 자유 비교 모드에서만 표시되는 축 선택 -->
+            <div class="axis-selects" id="axisRow">
+              <label>X축 <select id="cmpAxisX"></select></label>
+              <label>Y축 <select id="cmpAxisY"></select></label>
+            </div>
+            <!-- Polarization 모드 안내 -->
+            <p class="hint polar-hint" id="polarHint" hidden>
+              <i class="bi bi-info-circle"></i>
+              IV 측정 유형의 Experiment 만 표시됩니다 (X: Current Density · Y: Cell Voltage, 전류밀도 순 정렬)</p>
+            <div class="chart-wrap analysis-chart-wrap">
+              <canvas id="cmpChart"></canvas>
+            </div>
+          </div>
+
+          <!-- 통계 요약 : 선택된 Experiment 별 기본 통계 -->
+          <div class="card">
+            <div class="card-title"><span><i class="bi bi-calculator"></i> 통계 요약</span></div>
+            <div class="table-wrap stats-wrap">
+              <table id="statsTable">
+                <thead>
+                  <tr>
+                    <th>Experiment</th><th>유형</th><th>N</th>
+                    <th>Cell V 평균</th><th>표준편차</th><th>최소</th><th>최대</th>
+                    <th>C.D. 평균</th><th>Temp 평균</th>
+                  </tr>
+                </thead>
+                <tbody id="statsTbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 페이지 3 : PEM Cell Layer Designer ============ -->
+    <section class="page" id="page-layer">
+      <header class="page-header card">
+        <div class="header-title">
+          <h1><i class="bi bi-layers"></i> PEM Cell Layer Designer</h1>
+          <!-- 좌우 대칭 잠금: Anode/Cathode 동기화 -->
+          <label class="sym-lock" title="Anode 수정 시 Cathode 자동 동기화">
+            <input type="checkbox" id="symLock" checked />
+            <i class="bi bi-symmetry-vertical"></i> 좌우 대칭 잠금
+          </label>
+        </div>
+      </header>
+
+      <div class="layer-grid">
+        <!-- ---------- 좌측 : Layer Editor ---------- -->
+        <div class="card">
+          <div class="card-title">
+            <span><i class="bi bi-sliders"></i> Layer Editor</span>
+            <div class="btn-row-sm">
+              <button class="btn btn-sm btn-primary" id="btnAddInner" title="내부 층 추가 (예: PTL 2장)">＋ 층 추가</button>
+              <button class="btn btn-sm btn-outline" id="btnLayerReset" title="기본값으로 초기화">
+                <i class="bi bi-arrow-counterclockwise"></i> Reset
+              </button>
+              <button class="btn btn-sm btn-outline" id="btnLayerSaveJson" title="설계를 JSON 파일로 저장">
+                <i class="bi bi-download"></i> JSON
+              </button>
+              <button class="btn btn-sm btn-outline" id="btnLayerLoadJson" title="JSON 설계 불러오기">
+                <i class="bi bi-upload"></i> 불러오기
+              </button>
+            </div>
+          </div>
+          <div class="meta-field ld-mea-select">
+            <label>설계 대상 MEA (설계는 MEA별로 자동 저장)</label>
+            <select id="layerMeaSelect"></select>
+          </div>
+          <!-- 층 편집 행 (layer.js 자동 생성) -->
+          <ul class="layer-list" id="layerList"></ul>
+          <p class="hint"><i class="bi bi-info-circle"></i>
+            숫자 입력: 10 미만 = mm, 10 이상 = μm 로 자동 인식 · 눈 아이콘: 숨기기 · 드래그: 순서 변경</p>
+          <!-- 경로 범례: 프레임과 전극은 나란히 놓인 별개의 경로다 -->
+          <p class="hint path-legend">
+            <span><i class="ld-path ld-path-frame"></i> 프레임(실링)</span>
+            <span><i class="ld-path ld-path-elec"></i> 전극(활성부)</span>
+            두 경로는 나란히 놓여 있어 <b>서로의 순서를 바꿔도 기하는 같습니다.</b>
+            같은 경로 안에서의 순서만 단면도에 반영됩니다.</p>
+          <input type="file" id="fileLayerJson" accept=".json" hidden />
+        </div>
+
+        <!-- ---------- 우측 : 단면도 + Cell Pitch 결과 ---------- -->
+        <div class="col-layer-right">
+          <!-- 실비율 단면도 (SVG) - 가장 위 -->
+          <div class="card">
+            <div class="card-title">
+              <span><i class="bi bi-align-middle"></i> Scaled Cross Section</span>
+              <div class="btn-row-sm">
+                <!-- BP 표시 높이: 3mm 판재가 도면을 다 먹어 셀 내부가 안 보이는 문제 해소 (표시 전용) -->
+                <select id="bpView" class="xsec-view" title="BP 판재를 얼마나 줄여서 볼지 (계산에는 영향 없음)">
+                  <option value="min">BP 축약</option>
+                  <option value="half">BP ½</option>
+                  <option value="full">BP 실비율</option>
+                </select>
+                <button class="btn btn-sm btn-outline" id="btnLayerPng"><i class="bi bi-image"></i> PNG</button>
+                <button class="btn btn-sm btn-outline" id="btnLayerSvg"><i class="bi bi-filetype-svg"></i> SVG</button>
+              </div>
+            </div>
+            <!-- 단면도 + 세로 압축 슬라이더 (조이는 방향과 같은 축) -->
+            <div class="xsec-row">
+              <div class="xsec-svg-wrap" id="xsecWrap">
+                <svg id="xsecSvg" xmlns="http://www.w3.org/2000/svg"></svg>
+              </div>
+
+              <!-- 체결 압축 시뮬레이션 -->
+              <!-- 압축률은 Anode/Cathode 가 같은 볼트로 조여지므로 항상 동일하다 -->
+              <div class="comp-bar">
+                <div class="comp-head">
+                  <b id="compValue">0.0 %</b>
+                  <label for="compSlider">가스켓 압축률</label>
+                </div>
+                <div class="comp-vtrack">
+                  <input type="range" id="compSlider" min="0" max="50" step="0.01" value="0"
+                         orient="vertical" title="아래로 내릴수록 조여집니다" />
+                  <!-- 매쉬 접촉 / 촉매 접촉 지점 눈금 (layer.js 가 위치 갱신) -->
+                  <span class="comp-tick tick-mesh" id="tickMesh" hidden></span>
+                  <span class="comp-tick tick-ccm" id="tickCcm" hidden></span>
+                </div>
+                <div class="comp-foot">
+                  <span class="comp-state" id="compState">비압축</span>
+                  <em id="compPitch">-</em>
+                  <div class="comp-btns">
+                    <button class="btn btn-sm btn-primary comp-play" id="btnCompPlay" title="0% 부터 현재 압축률까지 재생">
+                      <i class="bi bi-play-fill"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline" id="btnCompFit" title="전극이 CCM 에 막 닿는 압축률을 찾아 적용">
+                      <i class="bi bi-magnet"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline" id="btnCompReset" title="0% 로 되돌리기">
+                      <i class="bi bi-arrow-counterclockwise"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cell Pitch 결과 카드 (layer.js 갱신) -->
+          <div class="card pitch-card">
+            <div class="card-title"><span><i class="bi bi-rulers"></i> Cell Pitch</span></div>
+            <div id="pitchResult"></div>
+          </div>
+
+          <!-- 설계 라이브러리 : 이름 붙여 저장 → 현재 MEA 에 적용 -->
+          <div class="card">
+            <div class="card-title">
+              <span><i class="bi bi-collection"></i> 설계 라이브러리</span>
+              <div class="btn-row-sm">
+                <button class="btn btn-sm btn-primary" id="btnDesignSave">
+                  <i class="bi bi-bookmark-plus"></i> 설계 저장
+                </button>
+              </div>
+            </div>
+            <ul class="lib-list" id="designLib"></ul>
+            <p class="hint"><i class="bi bi-info-circle"></i>
+              적용하면 현재 선택된 MEA 의 설계를 덮어씁니다 · 전체 저장(JSON)에 함께 포함됩니다</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== MEA 정보 모달 ===================== -->
+  <!-- MEA 추가 / 제작 사양 조회·수정 공용 모달 (app.js 에서 제어) -->
+  <div class="modal-overlay" id="meaModal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <h2 id="meaModalTitle"><i class="bi bi-info-circle"></i> MEA 정보</h2>
+        <button class="modal-close" id="meaModalClose" title="닫기"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <!-- 폼 필드는 app.js 의 MEA_SPEC_FIELDS 정의로부터 자동 생성 -->
+      <div class="modal-body" id="meaModalBody"></div>
+      <div class="modal-foot">
+        <span class="modal-sub" id="meaModalSub"></span>
+        <div class="btn-row">
+          <button class="btn btn-outline" id="meaModalCancel">취소</button>
+          <button class="btn btn-primary" id="meaModalSave"><i class="bi bi-check-lg"></i> 저장</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== 측정 데이터 행 편집 모달 ===================== -->
+  <div class="modal-overlay" id="rowModal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <h2 id="rowModalTitle"><i class="bi bi-pencil-square"></i> 측정 데이터 수정</h2>
+        <button class="modal-close" id="rowModalClose" title="닫기"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="modal-body" id="rowModalBody"></div>
+      <div class="modal-foot">
+        <button class="btn btn-outline-danger" id="rowModalDelete"><i class="bi bi-trash3"></i> 이 행 삭제</button>
+        <div class="btn-row">
+          <button class="btn btn-outline" id="rowModalCancel">취소</button>
+          <button class="btn btn-primary" id="rowModalSave"><i class="bi bi-check-lg"></i> 저장</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== 내보내기 대상 선택 모달 ===================== -->
+  <div class="modal-overlay" id="exportModal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <h2 id="exportModalTitle"><i class="bi bi-box-arrow-up"></i> 내보내기</h2>
+        <button class="modal-close" id="exportModalClose" title="닫기"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="modal-body export-body">
+        <p class="export-desc" id="exportModalDesc"></p>
+        <div class="export-selectall">
+          <label><input type="checkbox" id="exportSelectAll" /> 전체 선택</label>
+        </div>
+        <!-- 내보낼 항목 목록 (app.js 에서 생성) -->
+        <ul class="export-list" id="exportList"></ul>
+      </div>
+      <div class="modal-foot">
+        <span class="modal-sub" id="exportModalHint"></span>
+        <div class="btn-row">
+          <button class="btn btn-outline" id="exportModalCancel">취소</button>
+          <button class="btn btn-primary" id="exportModalGo"><i class="bi bi-download"></i> 내보내기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== Layer 상세 모달 ===================== -->
+  <!-- Layer Editor 행을 클릭하면 모든 속성(폭/개구부/종류 등)을 편집 -->
+  <div class="modal-overlay" id="layerModal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <h2 id="layerModalTitle"><i class="bi bi-layers-half"></i> Layer 정보</h2>
+        <button class="modal-close" id="layerModalClose" title="닫기"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <div class="modal-body" id="layerModalBody"></div>
+      <div class="modal-foot">
+        <span class="modal-sub">숫자 입력: 10 미만 = mm, 10 이상 = μm</span>
+        <div class="btn-row">
+          <button class="btn btn-outline" id="layerModalCancel">취소</button>
+          <button class="btn btn-primary" id="layerModalSave"><i class="bi bi-check-lg"></i> 저장</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 토스트 알림 -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ===================== 스크립트 (순서 중요) ===================== -->
+  <script src="libs/chart.umd.min.js"></script>
+  <script src="libs/xlsx.full.min.js"></script>
+  <script src="utils.js?v=34"></script>
+  <script src="storage.js?v=34"></script>
+  <script src="table.js?v=34"></script>
+  <script src="chart.js?v=34"></script>
+  <script src="export.js?v=34"></script>
+  <script src="analysis.js?v=34"></script>
+  <script src="layer.js?v=34"></script>
+  <script src="app.js?v=34"></script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+HPM-300A 진단 v2 - 2026-08-03 14:06:03.972008
+
+[듣기만] baud=9600 DTR=True RTS=True cmd=b''
+
+[명령전송] baud=9600 DTR=True RTS=True cmd=b'S#'
+
+[명령전송] baud=9600 DTR=True RTS=True cmd=b'S#\r'
+
+[명령전송] baud=9600 DTR=True RTS=True cmd=b'S#\r\n'
+
+[명령전송] baud=9600 DTR=True RTS=True cmd=b'S\r'
+
+[명령전송] baud=9600 DTR=False RTS=False cmd=b'S#'
+
+[명령전송] baud=9600 DTR=False RTS=False cmd=b'S#\r'
+
+[명령전송] baud=9600 DTR=False RTS=False cmd=b'S#\r\n'
+
+[명령전송] baud=9600 DTR=False RTS=False cmd=b'S\r'
+
+[명령전송] baud=9600 DTR=True RTS=False cmd=b'S#'
+
+[명령전송] baud=9600 DTR=True RTS=False cmd=b'S#\r'
+
+[명령전송] baud=9600 DTR=True RTS=False cmd=b'S#\r\n'
+
+[명령전송] baud=9600 DTR=True RTS=False cmd=b'S\r'
+
+[명령전송] baud=9600 DTR=False RTS=True cmd=b'S#'
+
+[명령전송] baud=9600 DTR=False RTS=True cmd=b'S#\r'
+
+[명령전송] baud=9600 DTR=False RTS=True cmd=b'S#\r\n'
+
+[명령전송] baud=9600 DTR=False RTS=True cmd=b'S\r'
+
+[듣기만] baud=19200 DTR=True RTS=True cmd=b''
+
+[명령전송] baud=19200 DTR=True RTS=True cmd=b'S#'
+
+[명령전송] baud=19200 DTR=True RTS=True cmd=b'S#\r'
+
+[명령전송] baud=19200 DTR=True RTS=True cmd=b'S#\r\n'
+
+[명령전송] baud=19200 DTR=True RTS=True cmd=b'S\r'
+
+[명령전송] baud=19200 DTR=False RTS=False cmd=b'S#'
+
+[명령전송] baud=19200 DTR=False RTS=False cmd=b'S#\r'
+
+[명령전송] baud=19200 DTR=False RTS=False cmd=b'S#\r\n'
+
+[명령전송] baud=19200 DTR=False RTS=False cmd=b'S\r'
+
+[명령전송] baud=19200 DTR=True RTS=False cmd=b'S#'
+
+[명령전송] baud=19200 DTR=True RTS=False cmd=b'S#\r'
+
+[명령전송] baud=19200 DTR=True RTS=False cmd=b'S#\r\n'
+
+[명령전송] baud=19200 DTR=True RTS=False cmd=b'S\r'
+
+[명령전송] baud=19200 DTR=False RTS=True cmd=b'S#'
+
+[명령전송] baud=19200 DTR=False RTS=True cmd=b'S#\r'
+
+[명령전송] baud=19200 DTR=False RTS=True cmd=b'S#\r\n'
+
+[명령전송] baud=19200 DTR=False RTS=True cmd=b'S\r'
+
+[듣기만] baud=38400 DTR=True RTS=True cmd=b''
+
+[명령전송] baud=38400 DTR=True RTS=True cmd=b'S#'
+
+[명령전송] baud=38400 DTR=True RTS=True cmd=b'S#\r'
+
+[명령전송] baud=38400 DTR=True RTS=True cmd=b'S#\r\n'
+
+[명령전송] baud=38400 DTR=True RTS=True cmd=b'S\r'
+
+[명령전송] baud=38400 DTR=False RTS=False cmd=b'S#'
+
+[명령전송] baud=38400 DTR=False RTS=False cmd=b'S#\r'
+
+[명령전송] baud=38400 DTR=False RTS=False cmd=b'S#\r\n'
+
+[명령전송] baud=38400 DTR=False RTS=False cmd=b'S\r'
+
+[명령전송] baud=38400 DTR=True RTS=False cmd=b'S#'
+
+[명령전송] baud=38400 DTR=True RTS=False cmd=b'S#\r'
+
+[명령전송] baud=38400 DTR=True RTS=False cmd=b'S#\r\n'
+
+[명령전송] baud=38400 DTR=True RTS=False cmd=b'S\r'
+
+[명령전송] baud=38400 DTR=False RTS=True cmd=b'S#'
+
+[명령전송] baud=38400 DTR=False RTS=True cmd=b'S#\r'
+
+[명령전송] baud=38400 DTR=False RTS=True cmd=b'S#\r\n'
+
+[명령전송] baud=38400 DTR=False RTS=True cmd=b'S\r'
+
+[듣기만] baud=4800 DTR=True RTS=True cmd=b''
+
+[명령전송] baud=4800 DTR=True RTS=True cmd=b'S#'
+
+[명령전송] baud=4800 DTR=True RTS=True cmd=b'S#\r'
+
+[명령전송] baud=4800 DTR=True RTS=True cmd=b'S#\r\n'
+
+[명령전송] baud=4800 DTR=True RTS=True cmd=b'S\r'
+
+[명령전송] baud=4800 DTR=False RTS=False cmd=b'S#'
+
+[명령전송] baud=4800 DTR=False RTS=False cmd=b'S#\r'
+
+[명령전송] baud=4800 DTR=False RTS=False cmd=b'S#\r\n'
+
+[명령전송] baud=4800 DTR=False RTS=False cmd=b'S\r'
+
+[명령전송] baud=4800 DTR=True RTS=False cmd=b'S#'
+
+[명령전송] baud=4800 DTR=True RTS=False cmd=b'S#\r'
+
+[명령전송] baud=4800 DTR=True RTS=False cmd=b'S#\r\n'
+
+[명령전송] baud=4800 DTR=True RTS=False cmd=b'S\r'
+
+[명령전송] baud=4800 DTR=False RTS=True cmd=b'S#'
+
+[명령전송] baud=4800 DTR=False RTS=True cmd=b'S#\r'
+
+[명령전송] baud=4800 DTR=False RTS=True cmd=b'S#\r\n'
+
+[명령전송] baud=4800 DTR=False RTS=True cmd=b'S\r'
+
+[!] 모든 조합에서 응답 없음.
+    다음을 확인하세요:
+    1) 장비 화면에 전압/전류 값이 실제로 표시되는 측정 상태인가
+    2) 장비에 'PC 통신' 모드/버튼이 있고 켜져 있는가 (통신 아이콘 점등)
+    3) 이 케이블이 AD Power 정품 데이터 케이블인가 (일반 FTDI 케이블은 배선이 다를 수 있음)
+    4) 배터리/전원이 충분한가
