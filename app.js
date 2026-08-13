@@ -852,21 +852,100 @@
     ul.replaceChildren(frag);
   }
 
+  /* ============================================================
+   * Experiment 편집 모달
+   * ============================================================ */
+
+  let expModalId = null;
+
+  function openExpModal(expId) {
+    const exp = Storage.getExperiment(expId);
+    if (!exp) return;
+    expModalId = expId;
+    $("expModalTitle").innerHTML = `<i class="bi bi-pencil-square"></i> Experiment 수정 <small>(${exp.name})</small>`;
+
+    const meaOptions = Storage.state.meaList
+      .map((m) => `<option value="${m.id}" ${m.id === exp.meaId ? "selected" : ""}>${m.name}</option>`)
+      .join("");
+
+    $("expModalBody").innerHTML = `
+      <div class="meta-field full"><label>제목</label>
+        <input data-em="name" type="text" value="${(exp.name || "").replace(/"/g, "&quot;")}" /></div>
+      <div class="meta-field full"><label>사용된 MEA</label>
+        <select data-em="meaId"><option value="">(변경 안 함)</option>${meaOptions}</select></div>
+      <div class="meta-field"><label>실험 유형</label>
+        <select data-em="type">
+          <option value="stability" ${exp.type !== "iv" ? "selected" : ""}>안정성 (시간)</option>
+          <option value="iv" ${exp.type === "iv" ? "selected" : ""}>IV 측정 (Polarization)</option>
+        </select></div>
+      <div class="meta-field"><label>평가 Cell 수</label>
+        <input data-em="cellCount" type="number" min="1" step="1" value="${exp.conditions?.cellCount ?? ""}" /></div>
+      <div class="meta-field"><label>Temperature (℃)</label>
+        <input data-em="temperature" type="number" step="any" value="${exp.conditions?.temperature ?? ""}" /></div>
+      <div class="meta-field"><label>날짜</label>
+        <input data-em="date" type="date" value="${exp.date || ""}" /></div>
+      <div class="meta-field"><label>실험자</label>
+        <input data-em="operator" type="text" value="${(exp.operator || "").replace(/"/g, "&quot;")}" /></div>
+      <div class="meta-field full"><label>메모</label>
+        <input data-em="memo" type="text" value="${(exp.memo || "").replace(/"/g, "&quot;")}" /></div>`;
+    $("expModal").hidden = false;
+  }
+
+  function closeExpModal() { $("expModal").hidden = true; expModalId = null; }
+
+  function saveExpModal() {
+    const exp = Storage.getExperiment(expModalId);
+    if (!exp) { closeExpModal(); return; }
+    const get = (k) => document.querySelector(`#expModalBody [data-em="${k}"]`)?.value;
+
+    const patch = {};
+    const name = (get("name") || "").trim();
+    if (name) patch.name = name;
+    patch.type = get("type") === "iv" ? "iv" : "stability";
+    patch.date = get("date") || exp.date;
+    patch.operator = get("operator") || "";
+    patch.memo = get("memo") || "";
+    const meaId = get("meaId");
+    if (meaId) patch.meaId = meaId;
+
+    const condPatch = {};
+    const cc = get("cellCount");
+    condPatch.cellCount = cc === "" ? null : Number(cc);
+    const tp = get("temperature");
+    condPatch.temperature = tp === "" ? null : Number(tp);
+
+    Storage.updateExperiment(expModalId, patch, condPatch);
+    closeExpModal();
+    renderExpList();
+    Utils.toast("Experiment 정보를 수정했습니다.");
+  }
+
+  function bindExpModal() {
+    $("expModalClose").addEventListener("click", closeExpModal);
+    $("expModalCancel").addEventListener("click", closeExpModal);
+    $("expModalSave").addEventListener("click", saveExpModal);
+    $("expModal").addEventListener("click", (e) => {
+      if (e.target === $("expModal")) closeExpModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if ($("expModal").hidden) return;
+      if (e.key === "Escape") closeExpModal();
+      if (e.key === "Enter" && e.target.matches("#expModalBody input")) saveExpModal();
+    });
+  }
+
   /** Experiment 목록 이벤트 (불러오기 / 삭제) */
   function bindExpListEvents() {
+    bindExpModal();
     $("expList").addEventListener("click", (e) => {
       const li = e.target.closest(".exp-item");
       if (!li) return;
       const exp = Storage.getExperiment(li.dataset.id);
       if (!exp) return;
 
-      // 제목 수정
+      // 편집 (제목·MEA·유형·Cell수·온도·날짜 등)
       if (e.target.closest(".exp-edit")) {
-        const newName = prompt("실험 제목:", exp.name);
-        if (newName && newName.trim()) {
-          Storage.renameExperiment(exp.id, newName.trim());
-          renderExpList();
-        }
+        openExpModal(exp.id);
         return;
       }
 
@@ -1047,6 +1126,8 @@
     );
 
     $("btnJsonSave").addEventListener("click", () => runExport("JSON 저장", () => Exporter.saveJSON()));
+    const pub = $("btnPublishSave");
+    if (pub) pub.addEventListener("click", () => runExport("배포용 저장", () => Exporter.savePublishJSON()));
 
     $("btnJsonLoad").addEventListener("click", () => $("fileJson").click());
     $("fileJson").addEventListener("change", (e) => {
@@ -1365,6 +1446,50 @@
     safe("초기 렌더링", renderAll);
     safe("데이터 복구", restoreDraft);
     safe("상태 표시", applyRunState);
+
+    // ---- 4) 배포 data.json 자동 로드 (github.io 방문자용) ----
+    tryLoadPublished();
+  }
+
+  /**
+   * 같은 폴더의 data.json(배포 스냅샷)을 시도해서 불러온다.
+   * - 첫 방문(LocalStorage 비어있음): 자동 로드
+   * - 재방문인데 data.json 이 더 최신(publishedAt): 덮어쓸지 확인
+   * - 이미 최신이거나 파일 없음(file:// 등): 조용히 무시 → 기존 LocalStorage 사용
+   */
+  async function tryLoadPublished() {
+    try {
+      const res = await fetch("data.json", { cache: "no-store" });
+      if (!res.ok) return;
+      const json = await res.json();
+      if (!json || !Array.isArray(json.meaList)) return;
+
+      const published = Number(json.publishedAt) || 0;
+      const lastLoaded = Number(Storage.state.settings.lastPublishedAt) || 0;
+      const isFresh = !Storage.hadSavedState;         // 첫 방문
+      const isNewer = published > 0 && published > lastLoaded;
+
+      if (!isFresh && !isNewer) return;               // 이미 최신 → 그대로 둠
+      // 재방문 + 더 최신 배포본이면 덮어쓸지 확인 (첫 방문은 바로 로드)
+      if (!isFresh && isNewer) {
+        const when = new Date(published).toLocaleString();
+        if (!confirm(`새 배포 데이터(${when})가 있습니다.\n현재 화면 데이터를 덮어쓰고 불러올까요?`)) {
+          // 거절 시 이 버전은 다시 안 묻도록 기록
+          Storage.state.settings.lastPublishedAt = published;
+          Storage.save();
+          return;
+        }
+      }
+
+      Storage.importJSON(JSON.stringify(json));
+      Storage.state.settings.lastPublishedAt = published;
+      Storage.save();
+      renderAll();
+      Utils.toast("배포 데이터를 불러왔습니다.");
+    } catch (err) {
+      // data.json 없음 / file:// CORS 등 → 무시하고 LocalStorage 사용
+      console.debug("[publish] data.json 자동 로드 건너뜀:", err.message);
+    }
   }
 
   // DOM 준비 후 시작

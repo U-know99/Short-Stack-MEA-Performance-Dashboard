@@ -40,6 +40,20 @@
     },
 
     /**
+     * 배포용 data.json 저장
+     * - 전체 상태에 publishedAt(발행 시각)을 찍어 "data.json" 이름으로 저장
+     * - 이 파일을 index.html 과 같은 GitHub 폴더에 올리면
+     *   github.io 방문자가 접속 시 자동으로 불러온다.
+     */
+    savePublishJSON() {
+      const state = JSON.parse(Storage.exportJSON());
+      state.publishedAt = Date.now();
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+      Utils.downloadBlob(blob, "data.json");
+      Utils.toast("data.json 저장 완료. GitHub 폴더(index.html 옆)에 올린 뒤 push 하세요.", 5000);
+    },
+
+    /**
      * JSON 파일을 읽어 전체 상태 복원
      * @param {File} file - <input type="file"> 에서 받은 파일
      * @param {Function} onDone - 복원 완료 후 UI 갱신 콜백

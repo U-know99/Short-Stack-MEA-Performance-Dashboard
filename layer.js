@@ -165,6 +165,19 @@
     if (!Number.isFinite(v) || v < 0) return 0;
     return v < 10 ? Math.round(v * 1000) : Math.round(v);
   }
+  /**
+   * 화면에 표시된 단위(μm/mm)를 그대로 사용해 입력값을 μm 로 변환.
+   * (자동 판별로 인한 오류 방지 - 예: 촉매 5μm 가 5mm 로 바뀌던 문제)
+   * μm 는 소수점 유지(촉매 2.5μm 등), mm 는 ×1000.
+   * @param {string|number} raw 입력값
+   * @param {number} curUm 현재 저장값(μm) - 표시 단위 판단용
+   */
+  function parseUmWithUnit(raw, curUm) {
+    const v = Number(raw);
+    if (!Number.isFinite(v) || v < 0) return 0;
+    const isMm = Number(curUm) >= 1000;   // 현재 mm 로 표시 중이면 mm 로 해석
+    return isMm ? Math.round(v * 1000) : Math.round(v * 100) / 100;
+  }
   function fmtUm(um) {
     if (um >= 1000) return `${Number((um / 1000).toFixed(3))} mm`;
     return `${Number(um.toFixed(1))} μm`;
@@ -564,7 +577,9 @@
         if (f === "label") s.label = el.value.trim() || s.label;
         else if (f === "kind" || f === "ptlType" || f === "anchor") s[f] = el.value;
         else if (f === "rigid") s.rigid = el.value === "1";
-        else if (f === "th" || f === "groove") s[f] = parseUm(el.value);   // 단위 자동
+        // 두께/그루브: 표시 단위 그대로 해석 (촉매 <10μm 오인식 방지)
+        else if (f === "th") s.th = parseUmWithUnit(el.value, s.th);
+        else if (f === "groove") s.groove = parseUmWithUnit(el.value, s.groove);
         else s[f] = Number(el.value) || 0;                                  // mm 값
       });
 
@@ -595,7 +610,8 @@
       const commit = Utils.debounce((key, field, raw) => {
         const s = this.design.slots[key];
         if (!s) return;
-        if (field === "th") s.th = parseUm(raw);
+        // 두께: 현재 표시 단위 그대로 해석 (촉매 <10μm 오인식 방지)
+        if (field === "th") s.th = parseUmWithUnit(raw, s.th);
         else if (field === "label") s.label = raw;
         else s[field] = Number(raw) || 0;
         this._syncPair(key);

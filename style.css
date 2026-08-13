@@ -846,6 +846,51 @@ body {
 .stats-name { text-align: left !important; font-weight: 600; }
 .stats-name small { color: var(--text-sub); font-weight: 400; }
 
+/* ---------- 업체별 조건 비교 표 ---------- */
+.vc-controls {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.vc-vendor { margin-bottom: 18px; }
+.vc-vendor-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+.vc-vendor-name .bi { margin-right: 4px; }
+
+.vc-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.vc-table th {
+  background: var(--table-head); color: var(--text-sub);
+  font-weight: 600; padding: 8px 10px; text-align: center;
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+}
+.vc-table td {
+  padding: 7px 10px; text-align: center;
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.vc-table tbody tr:hover { background: var(--hover); }
+.vc-temp { font-weight: 700; color: var(--text); }
+.vc-pick select {
+  padding: 5px 7px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.78rem;
+  max-width: 200px;
+}
+.vc-empty { color: var(--text-sub); }
+.vc-extrap { color: var(--warning); font-weight: 600; }
+
+@media (max-width: 720px) {
+  .vc-controls { grid-template-columns: 1fr; }
+}
+
 /* ============================================================
    Layer 설계 페이지
    ============================================================ */

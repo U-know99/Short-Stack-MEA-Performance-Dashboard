@@ -7,7 +7,7 @@
 
   <!-- 로컬 라이브러리 (오프라인 동작) -->
   <link rel="stylesheet" href="libs/bootstrap-icons.min.css" />
-  <link rel="stylesheet" href="style.css?v=34" />
+  <link rel="stylesheet" href="style.css?v=36" />
 </head>
 <body>
 
@@ -59,6 +59,10 @@
             <button class="dropdown-item" id="btnJsonSave">
               <i class="bi bi-database-down"></i>
               <span>전체 저장 (JSON)<small>모든 데이터를 파일로 백업 - 다른 PC에서 불러오기 가능</small></span>
+            </button>
+            <button class="dropdown-item" id="btnPublishSave">
+              <i class="bi bi-github"></i>
+              <span>배포용 저장 (data.json)<small>이 파일을 GitHub 폴더에 올리면 github.io 방문자가 자동으로 봅니다</small></span>
             </button>
             <button class="dropdown-item" id="btnSaveExp">
               <i class="bi bi-flask"></i>
@@ -354,6 +358,39 @@
           </div>
         </div>
       </div>
+
+      <!-- ===== 업체별 조건 비교 표 (행=온도, 열=전류, 값=보간 Voltage) ===== -->
+      <div class="card">
+        <div class="card-title">
+          <span><i class="bi bi-table"></i> 업체별 조건 비교 표</span>
+          <button class="btn btn-sm btn-outline" id="btnVcTableCsv" title="비교 표 CSV 내보내기">
+            <i class="bi bi-filetype-csv"></i> CSV
+          </button>
+        </div>
+        <!-- 설정: 전류 지점, 온도, 표시값 -->
+        <div class="vc-controls">
+          <div class="meta-field">
+            <label>전류 지점 (A, 쉼표로 구분)</label>
+            <input type="text" id="vcCurrents" value="50, 100, 150, 200" />
+          </div>
+          <div class="meta-field">
+            <label>온도 (℃, 쉼표로 구분)</label>
+            <input type="text" id="vcTemps" value="40, 50, 60" />
+          </div>
+          <div class="meta-field">
+            <label>표시 값</label>
+            <select id="vcMetric">
+              <option value="voltage">Stack Voltage (V)</option>
+              <option value="cellVoltage">Cell Voltage (V)</option>
+              <option value="currentDensity">Current Density (A/cm²)</option>
+            </select>
+          </div>
+        </div>
+        <p class="hint"><i class="bi bi-info-circle"></i>
+          업체마다 표가 하나씩 · 온도칸의 드롭다운으로 실험 선택 · 값은 전류 기준 선형보간(범위 밖은 외삽, ⚠ 표시)</p>
+        <!-- 업체별 표는 analysis.js 에서 생성 -->
+        <div id="vcTables"></div>
+      </div>
     </section>
 
     <!-- ============ 페이지 3 : PEM Cell Layer Designer ============ -->
@@ -523,6 +560,25 @@
     </div>
   </div>
 
+  <!-- ===================== Experiment 편집 모달 ===================== -->
+  <div class="modal-overlay" id="expModal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <h2 id="expModalTitle"><i class="bi bi-pencil-square"></i> Experiment 수정</h2>
+        <button class="modal-close" id="expModalClose" title="닫기"><i class="bi bi-x-lg"></i></button>
+      </div>
+      <!-- 필드는 app.js 에서 생성 (제목/MEA/유형/Cell수/온도/날짜/실험자/메모) -->
+      <div class="modal-body" id="expModalBody"></div>
+      <div class="modal-foot">
+        <span class="modal-sub">측정 데이터는 그대로 유지됩니다.</span>
+        <div class="btn-row">
+          <button class="btn btn-outline" id="expModalCancel">취소</button>
+          <button class="btn btn-primary" id="expModalSave"><i class="bi bi-check-lg"></i> 저장</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ===================== 내보내기 대상 선택 모달 ===================== -->
   <div class="modal-overlay" id="exportModal" hidden>
     <div class="modal-card" role="dialog" aria-modal="true">
@@ -573,13 +629,13 @@
   <!-- ===================== 스크립트 (순서 중요) ===================== -->
   <script src="libs/chart.umd.min.js"></script>
   <script src="libs/xlsx.full.min.js"></script>
-  <script src="utils.js?v=34"></script>
-  <script src="storage.js?v=34"></script>
-  <script src="table.js?v=34"></script>
-  <script src="chart.js?v=34"></script>
-  <script src="export.js?v=34"></script>
-  <script src="analysis.js?v=34"></script>
-  <script src="layer.js?v=34"></script>
-  <script src="app.js?v=34"></script>
+  <script src="utils.js?v=36"></script>
+  <script src="storage.js?v=36"></script>
+  <script src="table.js?v=36"></script>
+  <script src="chart.js?v=36"></script>
+  <script src="export.js?v=36"></script>
+  <script src="analysis.js?v=36"></script>
+  <script src="layer.js?v=36"></script>
+  <script src="app.js?v=36"></script>
 </body>
 </html>

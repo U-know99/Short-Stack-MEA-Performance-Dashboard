@@ -88,6 +88,206 @@
       // 비교 그래프 PNG 저장
       const png = document.getElementById("btnCmpPng");
       if (png) png.addEventListener("click", () => this.exportPNG());
+
+      // 업체별 조건 비교 표
+      this._initVcTable();
+    },
+
+    /* ============================================================
+     * 업체별 조건 비교 표 (행=온도, 열=전류, 값=보간)
+     * ============================================================ */
+
+    /** 표 설정 초기화 + 이벤트 (설정은 Storage.settings.vcTable 에 저장) */
+    _initVcTable() {
+      const s = Storage.state.settings.vcTable || {};
+      const cur = document.getElementById("vcCurrents");
+      const tmp = document.getElementById("vcTemps");
+      const met = document.getElementById("vcMetric");
+      if (s.currents) cur.value = s.currents;
+      if (s.temps) tmp.value = s.temps;
+      if (s.metric) met.value = s.metric;
+      // 온도칸별 실험 선택 매핑 { "업체|온도": expId }
+      this.vcPick = s.pick || {};
+
+      const onCfg = () => {
+        Storage.state.settings.vcTable = {
+          currents: cur.value, temps: tmp.value, metric: met.value, pick: this.vcPick,
+        };
+        Storage.save();
+        this.renderVcTable();
+      };
+      cur.addEventListener("input", Utils.debounce(onCfg, 300));
+      tmp.addEventListener("input", Utils.debounce(onCfg, 300));
+      met.addEventListener("change", onCfg);
+
+      // 드롭다운(칸별 실험 선택) 변경 - 위임
+      document.getElementById("vcTables").addEventListener("change", (e) => {
+        const sel = e.target.closest("select[data-vc-key]");
+        if (!sel) return;
+        this.vcPick[sel.dataset.vcKey] = sel.value;
+        onCfg();
+      });
+
+      const csv = document.getElementById("btnVcTableCsv");
+      if (csv) csv.addEventListener("click", () => this.exportVcCsv());
+    },
+
+    /** "50, 100" 같은 문자열을 숫자 배열로 */
+    _parseList(str) {
+      return String(str || "").split(",")
+        .map((x) => Number(x.trim())).filter((x) => Number.isFinite(x));
+    },
+
+    /** 업체명 (specs.vendor > meaName 앞부분) */
+    _vendorOf(exp) {
+      const v = (exp.specs?.vendor || "").trim();
+      if (v) return v;
+      const nm = exp.meaName || "미분류";
+      return nm.includes("_") ? nm.split("_")[0] : nm;
+    },
+
+    /** Experiment 의 온도 조건 (반올림) */
+    _tempOf(exp) {
+      const v = Number(exp.conditions?.temperature);
+      return Number.isFinite(v) ? v : null;
+    },
+
+    /**
+     * 전류(current) → 지정 metric 값 선형보간 (범위 밖은 외삽)
+     * @returns {{value:number, extrap:boolean}|null}
+     */
+    _interp(exp, targetCurrent, metric) {
+      // (current, metric) 점들 - current 오름차순, 중복 current 는 평균
+      const byCur = new Map();
+      exp.data.forEach((r) => {
+        const c = Number(r.current);
+        const y = Number(r[metric]);
+        if (!Number.isFinite(c) || !Number.isFinite(y)) return;
+        if (!byCur.has(c)) byCur.set(c, []);
+        byCur.get(c).push(y);
+      });
+      const pts = [...byCur.entries()]
+        .map(([c, ys]) => [c, ys.reduce((a, b) => a + b, 0) / ys.length])
+        .sort((a, b) => a[0] - b[0]);
+      if (pts.length === 0) return null;
+      if (pts.length === 1) {
+        return { value: pts[0][1], extrap: pts[0][0] !== targetCurrent };
+      }
+      // 정확히 일치
+      const exact = pts.find((p) => p[0] === targetCurrent);
+      if (exact) return { value: exact[1], extrap: false };
+
+      // 보간 구간 탐색
+      for (let i = 0; i < pts.length - 1; i++) {
+        const [x0, y0] = pts[i], [x1, y1] = pts[i + 1];
+        if (targetCurrent >= x0 && targetCurrent <= x1) {
+          const t = (targetCurrent - x0) / (x1 - x0);
+          return { value: y0 + t * (y1 - y0), extrap: false };
+        }
+      }
+      // 범위 밖 → 외삽 (양 끝 두 점 기울기 사용)
+      let a, b;
+      if (targetCurrent < pts[0][0]) { a = pts[0]; b = pts[1]; }
+      else { a = pts[pts.length - 2]; b = pts[pts.length - 1]; }
+      const slope = (b[1] - a[1]) / (b[0] - a[0]);
+      return { value: a[1] + slope * (targetCurrent - a[0]), extrap: true };
+    },
+
+    /** 업체별 표 렌더링 */
+    renderVcTable() {
+      const box = document.getElementById("vcTables");
+      if (!box) return;
+      const currents = this._parseList(document.getElementById("vcCurrents").value);
+      const temps = this._parseList(document.getElementById("vcTemps").value);
+      const metric = document.getElementById("vcMetric").value;
+      const exps = Storage.state.experiments;
+
+      if (!exps.length || !currents.length || !temps.length) {
+        box.innerHTML = `<p class="empty-msg">실험을 저장하고 전류·온도를 입력하면 표가 생성됩니다.</p>`;
+        return;
+      }
+
+      // 업체별 그룹
+      const vendors = [...new Set(exps.map((e) => this._vendorOf(e)))].sort();
+
+      box.innerHTML = vendors.map((vendor) => {
+        const vExps = exps.filter((e) => this._vendorOf(e) === vendor);
+        const rows = temps.map((temp) => {
+          const key = `${vendor}|${temp}`;
+          // 이 업체·온도 칸의 선택 실험 (없으면 온도 자동 매칭 시도)
+          let picked = this.vcPick[key];
+          if (!picked || !Storage.getExperiment(picked)) {
+            const auto = vExps.find((e) => this._tempOf(e) === temp);
+            picked = auto ? auto.id : "";
+          }
+          const opts = `<option value="">(선택)</option>` + vExps.map((e) =>
+            `<option value="${e.id}" ${e.id === picked ? "selected" : ""}>${e.name}${
+              this._tempOf(e) != null ? ` (${this._tempOf(e)}℃)` : ""}</option>`).join("");
+
+          const exp = picked ? Storage.getExperiment(picked) : null;
+          const cells = currents.map((cur) => {
+            if (!exp) return `<td class="vc-empty">—</td>`;
+            const r = this._interp(exp, cur, metric);
+            if (!r) return `<td class="vc-empty">—</td>`;
+            return `<td class="${r.extrap ? "vc-extrap" : ""}" title="${r.extrap ? "외삽(측정범위 밖)" : "보간/측정"}">${
+              r.value.toFixed(3)}${r.extrap ? " ⚠" : ""}</td>`;
+          }).join("");
+
+          return `<tr>
+            <td class="vc-temp">${temp}℃</td>
+            <td class="vc-pick"><select data-vc-key="${key}">${opts}</select></td>
+            ${cells}
+          </tr>`;
+        }).join("");
+
+        return `
+          <div class="vc-vendor">
+            <div class="vc-vendor-name"><i class="bi bi-building"></i> ${vendor}</div>
+            <div class="table-wrap">
+              <table class="vc-table">
+                <thead><tr>
+                  <th>온도</th><th>실험</th>
+                  ${currents.map((c) => `<th>${c} A</th>`).join("")}
+                </tr></thead>
+                <tbody>${rows}</tbody>
+              </table>
+            </div>
+          </div>`;
+      }).join("");
+    },
+
+    /** 비교 표를 CSV 로 내보내기 */
+    exportVcCsv() {
+      const currents = this._parseList(document.getElementById("vcCurrents").value);
+      const temps = this._parseList(document.getElementById("vcTemps").value);
+      const metric = document.getElementById("vcMetric").value;
+      const exps = Storage.state.experiments;
+      if (!exps.length) { Utils.toast("저장된 실험이 없습니다."); return; }
+
+      const vendors = [...new Set(exps.map((e) => this._vendorOf(e)))].sort();
+      const lines = [["Vendor", "Temp(C)", "Experiment", ...currents.map((c) => `${c}A`)].join(",")];
+      vendors.forEach((vendor) => {
+        const vExps = exps.filter((e) => this._vendorOf(e) === vendor);
+        temps.forEach((temp) => {
+          const key = `${vendor}|${temp}`;
+          let picked = this.vcPick[key];
+          if (!picked || !Storage.getExperiment(picked)) {
+            const auto = vExps.find((e) => this._tempOf(e) === temp);
+            picked = auto ? auto.id : "";
+          }
+          const exp = picked ? Storage.getExperiment(picked) : null;
+          const vals = currents.map((cur) => {
+            if (!exp) return "";
+            const r = this._interp(exp, cur, metric);
+            return r ? r.value.toFixed(4) + (r.extrap ? "*" : "") : "";
+          });
+          lines.push([vendor, temp, exp ? exp.name : "", ...vals].join(","));
+        });
+      });
+      const csv = "﻿" + lines.join("\r\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      Utils.downloadBlob(blob, `조건비교표_${metric}_${Utils.fileTimestamp()}.csv`);
+      Utils.toast("비교 표를 CSV로 내보냈습니다. (* = 외삽값)");
     },
 
     /** 비교 Experiment 목록 드래그 정렬 (Storage 순서를 직접 재배치) */
@@ -142,6 +342,7 @@
       this.renderFilter();
       this.renderExpList();
       this.updateChart();
+      this.renderVcTable();
       // 숨김 → 표시 전환 직후 차트 크기 재계산
       if (this.chart) this.chart.resize();
     },

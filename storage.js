@@ -106,12 +106,15 @@
           // 기본값과 병합해 누락 필드를 보완 (스키마 확장 대비)
           this.state = Object.assign(defaultState(), parsed);
           this.state.settings = Object.assign(defaultState().settings, parsed.settings || {});
+          this.hadSavedState = true;   // LocalStorage 에 기존 데이터가 있었음
         } else {
           this.state = defaultState();
+          this.hadSavedState = false;  // 첫 방문 (배포 data.json 자동 로드 대상)
         }
       } catch (err) {
         console.error("[Storage] 로드 실패, 기본값으로 초기화:", err);
         this.state = defaultState();
+        this.hadSavedState = false;
       }
       this._migrate();
       this._applySeed();
@@ -319,6 +322,28 @@
     renameExperiment(expId, newName) {
       const exp = this.getExperiment(expId);
       if (exp && newName.trim()) exp.name = newName.trim();
+      this.save();
+    },
+
+    /**
+     * Experiment 메타 수정 (MEA/유형/Cell수/온도/날짜 등)
+     * @param {string} expId
+     * @param {object} patch - 덮어쓸 필드 { name, type, meaId, meaName, date, operator, memo }
+     * @param {object} condPatch - conditions 에 병합할 필드 { cellCount, temperature }
+     */
+    updateExperiment(expId, patch = {}, condPatch = {}) {
+      const exp = this.getExperiment(expId);
+      if (!exp) return;
+      Object.assign(exp, patch);
+      exp.conditions = Object.assign({}, exp.conditions, condPatch);
+      // MEA 를 바꾸면 사양(specs) 스냅샷도 새 MEA 기준으로 갱신
+      if (patch.meaId) {
+        const mea = this.getMea(patch.meaId);
+        if (mea) {
+          exp.meaName = mea.name;
+          exp.specs = Utils.deepClone(mea.specs || {});
+        }
+      }
       this.save();
     },
 
