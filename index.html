@@ -7,7 +7,7 @@
 
   <!-- 로컬 라이브러리 (오프라인 동작) -->
   <link rel="stylesheet" href="libs/bootstrap-icons.min.css" />
-  <link rel="stylesheet" href="style.css?v=36" />
+  <link rel="stylesheet" href="style.css?v=37" />
 </head>
 <body>
 
@@ -30,6 +30,9 @@
       </button>
       <button class="nav-item" data-page="page-layer">
         <i class="bi bi-layers"></i><span>Layer 설계</span>
+      </button>
+      <button class="nav-item" data-page="page-code">
+        <i class="bi bi-upc-scan"></i><span>소재 코드 &amp; 조립 사양</span>
       </button>
     </nav>
 
@@ -520,6 +523,100 @@
         </div>
       </div>
     </section>
+
+    <!-- ============ 페이지 4 : 소재 코드 & 조립 사양 ============ -->
+    <section class="page" id="page-code">
+      <header class="page-header card">
+        <div class="header-title"><h1><i class="bi bi-upc-scan"></i> 소재 코드 &amp; 조립 사양</h1></div>
+      </header>
+
+      <!-- ================= 상단: 소재 코드 등록 & 목록 ================= -->
+      <div class="card">
+        <div class="card-title">
+          <span><i class="bi bi-upc-scan"></i> 소재 코드 등록</span>
+          <button class="btn btn-sm btn-outline" id="matExcel" title="소재 목록을 Excel로 내보내기">
+            <i class="bi bi-file-earmark-excel"></i> Excel 내보내기
+          </button>
+        </div>
+        <!-- 코드 빌더 (자주 쓰는 값 select + 직접입력) -->
+        <div class="cb-bar">
+          <div class="meta-field cb-type-field">
+            <label>소재 종류</label>
+            <select id="cbType">
+              <option value="EP">End Plate (EP)</option>
+              <option value="CP">Current Plate (CP)</option>
+              <option value="BP" selected>Bipolar Plate (BP)</option>
+              <option value="GK">Gasket (GK)</option>
+              <option value="MEA">MEA</option>
+              <option value="PTL">PTL</option>
+              <option value="GDL">GDL</option>
+            </select>
+          </div>
+          <div class="cb-fields" id="cbFields"></div>
+          <div class="meta-field cb-note-field">
+            <label>메모 (선택)</label>
+            <input type="text" id="cbNote" placeholder="예: 재고 20EA" />
+          </div>
+          <div class="cb-add-wrap">
+            <label class="cb-code-label">생성 코드</label>
+            <div class="cb-code-row">
+              <span class="cb-code" id="cbCode">—</span>
+              <button class="btn btn-sm btn-primary" id="cbAdd"><i class="bi bi-plus-lg"></i> 목록 추가</button>
+            </div>
+            <p class="cb-decode" id="cbDecode"></p>
+          </div>
+        </div>
+        <!-- 소재별 등록 목록 (종류별 표, codespec.js 생성) -->
+        <div id="matTables" class="mat-tables"></div>
+      </div>
+
+      <!-- ================= 하단: 스택 조립 사양 기록표 ================= -->
+      <div class="code-bottom">
+          <div class="card">
+            <div class="card-title">
+              <span><i class="bi bi-clipboard-data"></i> 스택 조립 사양 (Stack Assembly Specification)</span>
+              <div class="btn-row-sm">
+                <button class="btn btn-sm btn-outline" id="asmLoadLayer" title="현재 Layer 설계에서 부품 코드/두께 불러오기">
+                  <i class="bi bi-box-arrow-in-down"></i> Layer 불러오기
+                </button>
+                <button class="btn btn-sm btn-primary" id="asmSave"><i class="bi bi-save"></i> 저장</button>
+                <button class="btn btn-sm btn-outline" id="asmWord"><i class="bi bi-file-earmark-word"></i> Word</button>
+              </div>
+            </div>
+
+            <!-- 기본 정보 -->
+            <div class="asm-sec">기본 정보</div>
+            <div class="asm-grid">
+              <div class="meta-field"><label>스택 ID</label><input id="asmStackId" type="text" placeholder="예: LBE-20C-001" /></div>
+              <div class="meta-field"><label>스택 제작일</label><input id="asmDate" type="date" /></div>
+              <div class="meta-field"><label>활성면적 (cm²)</label><input id="asmArea" type="text" placeholder="예: 100" /></div>
+              <div class="meta-field"><label>목표 두께 (압축률)</label><input id="asmTargetT" type="text" placeholder="예: 65.6 mm (30%)" /></div>
+              <div class="meta-field"><label>Column 수</label><input id="asmCol" type="number" min="0" placeholder="예: 1" /></div>
+              <div class="meta-field"><label>Layer 수</label><input id="asmLayer" type="number" min="0" placeholder="예: 3" /></div>
+              <div class="meta-field"><label>총 셀수</label><input id="asmCellTotal" type="number" min="0" placeholder="예: 3" /></div>
+            </div>
+
+            <!-- 부품 (코드 입력) -->
+            <div class="asm-sec">부품 (소재 코드)</div>
+            <div class="asm-parts" id="asmParts"></div>
+            <p class="hint"><i class="bi bi-info-circle"></i> 코드를 입력하면 우측에 해석된 사양이 표시됩니다 · 좌측 빌더로 코드를 만들어 붙여넣을 수 있어요</p>
+
+            <!-- 체결 조건 -->
+            <div class="asm-sec">체결 조건 (압력 · a · b · c · d)</div>
+            <div class="table-wrap">
+              <table class="asm-fasten">
+                <thead><tr><th>압력</th><th>a</th><th>b</th><th>c</th><th>d</th><th></th></tr></thead>
+                <tbody id="asmFastenBody"></tbody>
+              </table>
+            </div>
+            <button class="btn btn-sm btn-outline" id="asmFastenAdd"><i class="bi bi-plus-lg"></i> 행 추가</button>
+
+            <!-- 특이사항 -->
+            <div class="asm-sec">특이사항</div>
+            <textarea id="asmNotes" class="asm-notes" rows="3" placeholder="특이사항 입력"></textarea>
+          </div>
+      </div>
+    </section>
   </main>
 
   <!-- ===================== MEA 정보 모달 ===================== -->
@@ -629,13 +726,14 @@
   <!-- ===================== 스크립트 (순서 중요) ===================== -->
   <script src="libs/chart.umd.min.js"></script>
   <script src="libs/xlsx.full.min.js"></script>
-  <script src="utils.js?v=36"></script>
-  <script src="storage.js?v=36"></script>
-  <script src="table.js?v=36"></script>
-  <script src="chart.js?v=36"></script>
-  <script src="export.js?v=36"></script>
-  <script src="analysis.js?v=36"></script>
-  <script src="layer.js?v=36"></script>
-  <script src="app.js?v=36"></script>
+  <script src="utils.js?v=37"></script>
+  <script src="storage.js?v=37"></script>
+  <script src="table.js?v=37"></script>
+  <script src="chart.js?v=37"></script>
+  <script src="export.js?v=37"></script>
+  <script src="analysis.js?v=37"></script>
+  <script src="layer.js?v=37"></script>
+  <script src="codespec.js?v=37"></script>
+  <script src="app.js?v=37"></script>
 </body>
 </html>

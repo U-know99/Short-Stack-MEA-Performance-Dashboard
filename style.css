@@ -1434,6 +1434,115 @@ body {
   .layer-grid { grid-template-columns: 1fr; }
 }
 
+/* ============================================================
+   소재 코드 & 조립 사양 페이지
+   ============================================================ */
+/* 인라인 코드 빌더 바 */
+.cb-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px 12px;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.cb-type-field { min-width: 160px; }
+.cb-note-field { min-width: 130px; flex: 1; }
+.cb-bar .cb-fields { display: flex; flex-direction: row; align-items: flex-end; gap: 10px; flex-wrap: wrap; margin: 0; }
+.cb-bar .meta-field { min-width: 96px; }
+.cb-combo .combo-wrap { display: flex; flex-direction: column; gap: 4px; }
+.combo-custom { margin-top: 0; }
+.cb-chk { align-self: center; margin-bottom: 8px; }
+
+.cb-add-wrap { display: flex; flex-direction: column; gap: 3px; }
+.cb-code-label { font-size: 0.75rem; font-weight: 600; color: var(--text-sub); }
+.cb-code-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 10px; border-radius: 8px; background: var(--primary-soft);
+}
+
+/* 소재별 등록 표 */
+.mat-tables { display: flex; flex-direction: column; gap: 14px; }
+.mat-block-title {
+  font-size: 0.86rem; font-weight: 700; color: var(--primary); margin-bottom: 6px;
+  display: flex; align-items: center; gap: 6px;
+}
+.mat-count { background: var(--primary-soft); color: var(--primary); border-radius: 999px; padding: 0 8px; font-size: 0.72rem; }
+.mat-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.mat-table th { background: var(--table-head); color: var(--text-sub); font-weight: 600; padding: 6px 9px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+.mat-table td { padding: 6px 9px; border-bottom: 1px solid var(--border); }
+.mat-table tbody tr:hover { background: var(--hover); }
+.mat-code { font-family: "Consolas",monospace; font-weight: 700; color: var(--primary); white-space: nowrap; }
+.mat-note { color: var(--text-sub); }
+.mat-del { border: none; background: none; color: var(--text-sub); cursor: pointer; padding: 3px 5px; border-radius: 5px; }
+.mat-del:hover { color: var(--danger); background: rgba(214,69,80,0.1); }
+
+.code-bottom { }
+
+/* (구) 코드 빌더 - 세로형 (미사용 호환) */
+.cb-fields { display: flex; flex-direction: column; gap: 10px; margin: 4px 0 12px; }
+.cb-chk { display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--text); cursor: pointer; }
+.cb-chk input { accent-color: var(--primary); }
+.cb-result {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px; border-radius: 10px; background: var(--primary-soft);
+}
+.cb-code {
+  flex: 1; font-family: "Consolas","SFMono-Regular",monospace;
+  font-size: 1.15rem; font-weight: 800; color: var(--primary); letter-spacing: 0.5px;
+  word-break: break-all;
+}
+.cb-decode { font-size: 0.8rem; color: var(--text-sub); margin-top: 8px; }
+
+.code-ref-wrap { max-height: 320px; }
+.code-ref { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+.code-ref th { background: var(--table-head); color: var(--text-sub); font-weight: 600; padding: 7px 8px; text-align: left; border-bottom: 1px solid var(--border); }
+.code-ref td { padding: 7px 8px; border-bottom: 1px solid var(--border); }
+.code-ref code { font-family: "Consolas",monospace; font-size: 0.78rem; color: var(--primary); background: var(--primary-soft); padding: 1px 5px; border-radius: 4px; }
+
+/* 조립 사양 폼 */
+.asm-sec {
+  font-size: 0.82rem; font-weight: 700; color: var(--primary);
+  border-bottom: 1px solid var(--border); padding-bottom: 4px; margin: 16px 0 10px;
+}
+.asm-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.asm-parts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px 14px; }
+.asm-part { display: flex; flex-direction: column; gap: 3px; }
+.asm-part label { font-size: 0.75rem; font-weight: 600; color: var(--text-sub); }
+.asm-part input {
+  padding: 7px 9px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg); color: var(--text); font-size: 0.85rem; outline: none;
+  font-family: "Consolas","SFMono-Regular",monospace;
+}
+.asm-part input:focus { border-color: var(--primary); }
+.asm-decode { font-size: 0.72rem; color: var(--text-sub); min-height: 14px; }
+.asm-decode.ok { color: var(--success); }
+.asm-decode.warn { color: var(--warning); }
+
+.asm-fasten { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+.asm-fasten th { background: var(--table-head); color: var(--text-sub); font-weight: 600; padding: 6px 8px; border-bottom: 1px solid var(--border); }
+.asm-fasten td { padding: 3px 4px; border-bottom: 1px solid var(--border); }
+.asm-fasten input {
+  width: 100%; padding: 6px 7px; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--bg); color: var(--text); font-size: 0.82rem; outline: none; text-align: center;
+}
+.asm-fasten input:focus { border-color: var(--primary); }
+.fasten-del { border: none; background: none; color: var(--text-sub); cursor: pointer; padding: 4px 6px; border-radius: 5px; }
+.fasten-del:hover { color: var(--danger); background: rgba(214,69,80,0.1); }
+
+.asm-notes {
+  width: 100%; padding: 9px 11px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg); color: var(--text); font-size: 0.85rem; outline: none;
+  font-family: inherit; resize: vertical;
+}
+.asm-notes:focus { border-color: var(--primary); }
+
+@media (max-width: 1100px) {
+  .code-grid { grid-template-columns: 1fr; }
+  .asm-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
 /* ---------- 빈 페이지 ---------- */
 .empty-page {
   display: flex;

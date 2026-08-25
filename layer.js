@@ -519,6 +519,13 @@
 
       const F = [];
       if (s.custom) F.push(`<div class="meta-field"><label>층 이름</label><input data-lm="label" type="text" value="${Utils.escapeHtml(s.label)}" /></div>`);
+      // 소재 코드 입력 (BP·PTL): 코드를 넣으면 두께/Groove/종류를 자동 산정
+      const codeable = /^(bp|ptl)/.test(key);
+      if (codeable) {
+        const eg = key.startsWith("bp") ? "예: BP-3T-2G-2L" : "예: PTL-LTM-250-S / GDL-350-CS";
+        F.push(`<div class="meta-field full"><label>소재 코드 <small style="color:#64748b">(입력 시 두께·Groove 자동 반영)</small></label>
+          <input data-lm="code" type="text" value="${Utils.escapeHtml(s.code || "")}" placeholder="${eg}" /></div>`);
+      }
       if (key === "ptlA" || key === "ptlC") {
         F.push(`<div class="meta-field"><label>종류</label>
           <select data-lm="kind">
@@ -572,8 +579,10 @@
       const s = this.design?.slots[key];
       if (!s) { this.closeLayerModal(); return; }
 
+      let codeVal = null;
       document.querySelectorAll("#layerModalBody [data-lm]").forEach((el) => {
         const f = el.dataset.lm;
+        if (f === "code") { codeVal = el.value.trim(); return; } // 아래에서 별도 처리
         if (f === "label") s.label = el.value.trim() || s.label;
         else if (f === "kind" || f === "ptlType" || f === "anchor") s[f] = el.value;
         else if (f === "rigid") s.rigid = el.value === "1";
@@ -583,11 +592,59 @@
         else s[f] = Number(el.value) || 0;                                  // mm 값
       });
 
+      // 소재 코드 자동 반영 (수동 입력값보다 우선 - 코드가 정답)
+      if (codeVal !== null) this._applyCode(key, s, codeVal);
+
       this._syncPair(key);
       this.persist();
       this.closeLayerModal();
       this.renderAll();
       Utils.toast("층 정보를 수정했습니다.");
+    },
+
+    /**
+     * 소재 코드를 파싱해 슬롯 사양(두께/Groove/종류)에 반영
+     * codespec.js 의 parseCode 사용 (없으면 무시)
+     */
+    _applyCode(key, s, code) {
+      s.code = code || "";
+      if (!code || typeof window.parseCode !== "function") return;
+      const d = window.parseCode(code);
+      if (!d.ok) return;
+      const sp = d.specs || {};
+      if (key.startsWith("bp")) {
+        if (sp.thicknessUm != null) s.th = sp.thicknessUm;
+        if (sp.grooveUm != null && s.groove !== undefined) s.groove = sp.grooveUm;
+      } else if (key.startsWith("ptl")) {
+        if (sp.thicknessUm != null) s.th = sp.thicknessUm;
+        if (d.type === "GDL") s.kind = "GDL";
+        else if (d.type === "PTL") {
+          s.kind = "PTL";
+          if (sp.structure === "F") s.ptlType = "Felt";
+          else if (sp.structure === "S") s.ptlType = "Sintered";
+        }
+      }
+    },
+
+    /** 조립 사양 페이지가 부품 코드·치수를 가져갈 때 사용 */
+    getAssemblyHints() {
+      const d = this.design;
+      if (!d) return {};
+      const mea = Storage.getSelectedMea();
+      let targetText = "";
+      try {
+        const { pitch } = this.computePitch();
+        if (pitch) targetText = `${(pitch / 1000).toFixed(2)} mm (Cell Pitch)`;
+      } catch (e) {}
+      return {
+        area: mea?.specs?.activeArea,
+        cellTotal: mea?.conditions?.cellCount,
+        targetText,
+        bpCode: d.slots?.bpA?.code || "",
+        ptlCode: d.slots?.ptlA?.code || "",
+        gkCode: d.slots?.gasketA?.code || "",
+        gdlCode: (d.slots?.ptlA?.kind === "GDL" ? d.slots?.ptlA?.code : "") || "",
+      };
     },
 
     _bindLayerModal() {
