@@ -1473,8 +1473,84 @@
     "ivAxes": {
       "x": "current",
       "y": "voltage"
-    }
+    },
+    "lastPublishedAt": 1786339736193
   },
   "seedVersion": 2,
-  "publishedAt": 1786339736193
+  "publishedAt": 1787672778156,
+  "materials": [
+    {
+      "id": "mat_mt8u5wbp_6fgab",
+      "type": "CP",
+      "code": "CP-3T-2G-2L",
+      "desc": "3 mm / 0.2T Groove / 2 Line",
+      "specs": {
+        "thicknessUm": 3000,
+        "grooveUm": 200,
+        "design": "2L"
+      },
+      "note": ""
+    },
+    {
+      "id": "mat_mt8u5z3o_kjxi8",
+      "type": "BP",
+      "code": "BP-3T-2G-2L",
+      "desc": "3 mm / 0.2T Groove / 2 Line",
+      "specs": {
+        "thicknessUm": 3000,
+        "grooveUm": 200,
+        "design": "2L"
+      },
+      "note": ""
+    },
+    {
+      "id": "mat_mt8u63g7_e6v7i",
+      "type": "BP",
+      "code": "BP-1.5T-2G-2L",
+      "desc": "1.5 mm / 0.2T Groove / 2 Line",
+      "specs": {
+        "thicknessUm": 1500,
+        "grooveUm": 200,
+        "design": "2L"
+      },
+      "note": ""
+    },
+    {
+      "id": "mat_mt8u69oo_l8o2d",
+      "type": "CP",
+      "code": "CP-1.5T-2G-2L",
+      "desc": "1.5 mm / 0.2T Groove / 2 Line",
+      "specs": {
+        "thicknessUm": 1500,
+        "grooveUm": 200,
+        "design": "2L"
+      },
+      "note": ""
+    },
+    {
+      "id": "mat_mt8u6g8d_d6tat",
+      "type": "EP",
+      "code": "EP-10T-6C",
+      "desc": "10 mm / 6 Column End Plate",
+      "specs": {
+        "thicknessUm": 10000,
+        "columns": 6
+      },
+      "note": ""
+    },
+    {
+      "id": "mat_mt8u6p4q_srygc",
+      "type": "PTL",
+      "code": "PTL-LTM-350-F",
+      "desc": "LT메탈 / 350 μm / Felt",
+      "specs": {
+        "vendor": "LT메탈",
+        "vendorCode": "LTM",
+        "thicknessUm": 350,
+        "structure": "F",
+        "coatings": []
+      },
+      "note": ""
+    }
+  ]
 }
