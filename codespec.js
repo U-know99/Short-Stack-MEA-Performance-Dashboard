@@ -6,10 +6,10 @@
  *     - Layer 설계에서 부품 코드/치수 불러오기
  *
  * 코드 형식
- *   EP-두께-Column          예) EP-10T-6C
- *   CP/BP-두께-Groove-Design 예) BP-3T-2G-2L, BP-1T-NG-SQ
+ *   EP-두께-Column                예) EP-10T-2C
+ *   CP/BP-두께-Column-Groove-Design 예) BP-3T-2C-2G-2L, BP-1T-1C-NG-SQ
  *   GK-Design               예) GK-2L
- *   MEA-업체-면적           예) MEA-BNT-120
+ *   MEA-업체-면적           예) MEA-VNT-120
  *   PTL-업체-두께-구조-[P]-[M] 예) PTL-LTM-250-S, PTL-BEK-350-F-P-M
  *   GDL-두께-[CS]           예) GDL-350-CS
  * ============================================================ */
@@ -17,7 +17,7 @@
   "use strict";
 
   /* ---------------- 코드 사전 ---------------- */
-  const VENDOR_MEA = { TCS:"더카본스튜디오", BNT:"비나텍", HMT:"HEMT", WSP:"웨스피", BYS:"보야스에너지" };
+  const VENDOR_MEA = { TCS:"더카본스튜디오", VNT:"비나텍", HMT:"HEMT", WSP:"웨스피", BYS:"보야스에너지" };
   const VENDOR_PTL = { LTM:"LT메탈", ENR:"에너리치", BEK:"베카르트" };
   const GROOVE = { "2G":{um:200,label:"0.2T Groove"}, "4G":{um:400,label:"0.4T Groove"}, "6G":{um:600,label:"0.6T Groove"}, "NG":{um:0,label:"No Groove"} };
   const DESIGN = { "2L":"2 Line", "FG":"면 Groove", "SQ":"네모개구리", "TR":"세모개구리", "NG":"No Groove" };
@@ -51,10 +51,10 @@
         out.specs = { thicknessUm: um, columns: Number.isFinite(col) ? col : null };
         out.desc = `${um != null ? umToMm(um) + " mm" : "?"}${col ? " / " + col + " Column" : ""} End Plate`;
       } else if (type === "CP" || type === "BP") {
-        const um = thToUm(t[1]); const g = GROOVE[t[2]]; const design = DESIGN[t[3]];
+        const um = thToUm(t[1]); const col = t[2] ? parseInt(t[2]) : null; const g = GROOVE[t[3]]; const design = DESIGN[t[4]];
         out.label = type === "BP" ? "Bipolar Plate" : "Current Plate";
-        out.specs = { thicknessUm: um, grooveUm: g ? g.um : null, design: t[3] || null };
-        out.desc = `${um != null ? umToMm(um) + " mm" : "?"} / ${g ? g.label : (t[2]||"?")} / ${design || t[3] || "?"}`;
+        out.specs = { thicknessUm: um, columns: Number.isFinite(col) ? col : null, grooveUm: g ? g.um : null, design: t[4] || null };
+        out.desc = `${um != null ? umToMm(um) + " mm" : "?"}${col ? " / " + col + " Column" : ""} / ${g ? g.label : (t[3]||"?")} / ${design || t[4] || "?"}`;
       } else if (type === "GK") {
         out.label = "Gasket";
         out.specs = { design: t[1] || null };
@@ -87,14 +87,17 @@
    * 코드 빌더 UI (좌측)
    * ============================================================ */
   // 종류별 입력 필드 정의
-  //  type: combo(자주쓰는값 select + 직접입력) / sel(GROOVE) / selD(DESIGN) / selV(업체) / selP(구조) / chk
+  //  type: combo(자주쓰는값 select + 직접입력) — list(값 배열) 또는 opts(코드→설명 사전) 중 하나를 사용 / chk(체크박스)
+  //  select 로 고르는 항목은 모두 combo 라서 목록에 없는 값(코드)도 "직접입력…"으로 바로 넣을 수 있다.
+  //  두께처럼 숫자만 바뀌는 값은 목록에서 골라 코드가 자동 생성되고,
+  //  설계 구조처럼 새 값이 계속 생길 수 있는 항목은 직접입력으로 코드 자체를 입력한다.
   const BUILDER = {
-    EP: [ {k:"th",label:"두께",type:"combo",list:["10T","6T"],def:"10T"}, {k:"col",label:"Column 수",type:"combo",list:["6C","4C","1C"],def:"6C"} ],
-    CP: [ {k:"th",label:"두께",type:"combo",list:["3T","1.5T","1T"],def:"3T"}, {k:"groove",label:"Groove",type:"sel",opts:GROOVE,def:"2G"}, {k:"design",label:"설계 구조",type:"selD",opts:DESIGN,def:"2L"} ],
-    BP: [ {k:"th",label:"두께",type:"combo",list:["3T","1.5T","1T"],def:"3T"}, {k:"groove",label:"Groove",type:"sel",opts:GROOVE,def:"2G"}, {k:"design",label:"설계 구조",type:"selD",opts:DESIGN,def:"2L"} ],
-    GK: [ {k:"design",label:"설계 구조",type:"selD",opts:DESIGN,def:"2L"} ],
-    MEA:[ {k:"vendor",label:"업체",type:"selV",opts:VENDOR_MEA,def:"TCS"}, {k:"area",label:"면적(cm²)",type:"combo",list:["100","120"],def:"100"} ],
-    PTL:[ {k:"vendor",label:"업체",type:"selV",opts:VENDOR_PTL,def:"LTM"}, {k:"th",label:"두께(μm)",type:"combo",list:["350","250","500"],def:"350"}, {k:"struct",label:"구조",type:"selP",opts:PTL_STRUCT,def:"F"}, {k:"pt",label:"Pt coating",type:"chk"}, {k:"mpl",label:"MPL coating",type:"chk"} ],
+    EP: [ {k:"th",label:"두께",type:"combo",list:["10T","6T"],def:"10T"}, {k:"col",label:"Column 수",type:"combo",list:["1C","2C","4C"],def:"2C"} ],
+    CP: [ {k:"th",label:"두께",type:"combo",list:["3T","1.5T","1T"],def:"3T"}, {k:"col",label:"Column 수",type:"combo",list:["1C","2C","4C"],def:"2C"}, {k:"groove",label:"Groove",type:"combo",opts:GROOVE,def:"2G"}, {k:"design",label:"설계 구조",type:"combo",opts:DESIGN,def:"2L"} ],
+    BP: [ {k:"th",label:"두께",type:"combo",list:["3T","1.5T","1T"],def:"3T"}, {k:"col",label:"Column 수",type:"combo",list:["1C","2C","4C"],def:"2C"}, {k:"groove",label:"Groove",type:"combo",opts:GROOVE,def:"2G"}, {k:"design",label:"설계 구조",type:"combo",opts:DESIGN,def:"2L"} ],
+    GK: [ {k:"design",label:"설계 구조",type:"combo",opts:DESIGN,def:"2L"} ],
+    MEA:[ {k:"vendor",label:"업체",type:"combo",opts:VENDOR_MEA,def:"TCS"}, {k:"area",label:"면적(cm²)",type:"combo",list:["100","120"],def:"100"} ],
+    PTL:[ {k:"vendor",label:"업체",type:"combo",opts:VENDOR_PTL,def:"LTM"}, {k:"th",label:"두께(μm)",type:"combo",list:["350","250","500"],def:"350"}, {k:"struct",label:"구조",type:"combo",opts:PTL_STRUCT,def:"F"}, {k:"pt",label:"Pt coating",type:"chk"}, {k:"mpl",label:"MPL coating",type:"chk"} ],
     GDL:[ {k:"th",label:"두께(μm)",type:"combo",list:["150","200","250","350","500"],def:"350"}, {k:"cs",label:"CS Type",type:"chk"} ],
   };
 
@@ -102,13 +105,16 @@
     return Object.entries(opts).map(([c, v]) =>
       `<option value="${c}" ${c === def ? "selected" : ""}>${c} — ${typeof v === "object" ? v.label : v}</option>`).join("");
   }
-  // 콤보(select + 직접입력) 필드 HTML
+  // 콤보(select + 직접입력) 필드 HTML — f.opts(코드→설명 사전) 또는 f.list(값 배열) 지원
   function comboHtml(f) {
-    const opts = f.list.map((v) => `<option value="${v}" ${v === f.def ? "selected" : ""}>${v}</option>`).join("");
+    const opts = f.opts
+      ? Object.entries(f.opts).map(([c, v]) =>
+          `<option value="${c}" ${c === f.def ? "selected" : ""}>${c} — ${typeof v === "object" ? v.label : v}</option>`).join("")
+      : (f.list || []).map((v) => `<option value="${v}" ${v === f.def ? "selected" : ""}>${v}</option>`).join("");
     return `<div class="meta-field cb-combo"><label>${f.label}</label>
       <div class="combo-wrap">
         <select data-k="${f.k}" data-combo="1">${opts}<option value="__C">직접입력…</option></select>
-        <input type="text" data-k="${f.k}__c" class="combo-custom" placeholder="직접입력" hidden />
+        <input type="text" data-k="${f.k}__c" class="combo-custom" placeholder="직접입력 (코드)" hidden />
       </div></div>`;
   }
 
@@ -181,8 +187,8 @@
       const designName = { "2L":"2 Line","FG":"면 Groove","SQ":"네모개구리","TR":"세모개구리","NG":"No Groove" };
       const map = {
         EP:  [["두께", s=>um(s.thicknessUm)], ["Column", s=>s.columns!=null?s.columns+"C":""]],
-        CP:  [["두께", s=>um(s.thicknessUm)], ["Groove", s=>grooveT(s.grooveUm)], ["설계", s=>designName[s.design]||s.design||""]],
-        BP:  [["두께", s=>um(s.thicknessUm)], ["Groove", s=>grooveT(s.grooveUm)], ["설계", s=>designName[s.design]||s.design||""]],
+        CP:  [["두께", s=>um(s.thicknessUm)], ["Column", s=>s.columns!=null?s.columns+"C":""], ["Groove", s=>grooveT(s.grooveUm)], ["설계", s=>designName[s.design]||s.design||""]],
+        BP:  [["두께", s=>um(s.thicknessUm)], ["Column", s=>s.columns!=null?s.columns+"C":""], ["Groove", s=>grooveT(s.grooveUm)], ["설계", s=>designName[s.design]||s.design||""]],
         GK:  [["설계 구조", s=>designName[s.design]||s.design||""]],
         MEA: [["업체", s=>s.vendor||""], ["면적", s=>s.areaCm2!=null?s.areaCm2+" cm²":""]],
         PTL: [["업체", s=>s.vendor||""], ["두께", s=>um(s.thicknessUm)], ["구조", s=>({F:"Felt",S:"Sintered"}[s.structure]||s.structure||"")],
@@ -289,7 +295,7 @@
       };
       let parts = [type];
       if (type === "EP") parts.push(val("th"), val("col"));
-      else if (type === "CP" || type === "BP") parts.push(val("th"), val("groove"), val("design"));
+      else if (type === "CP" || type === "BP") parts.push(val("th"), val("col"), val("groove"), val("design"));
       else if (type === "GK") parts.push(val("design"));
       else if (type === "MEA") parts.push(val("vendor"), val("area"));
       else if (type === "PTL") { parts.push(val("vendor"), val("th"), val("struct")); if (val("pt")) parts.push("P"); if (val("mpl")) parts.push("M"); }
@@ -302,11 +308,11 @@
 
     renderRefTable() {
       const rows = [
-        ["End Plate", "EP-두께-Column", "EP-10T-6C"],
-        ["Current Plate", "CP-두께-Groove-Design", "CP-3T-2G-2L"],
-        ["Bipolar Plate", "BP-두께-Groove-Design", "BP-1.5T-4G-SQ"],
+        ["End Plate", "EP-두께-Column", "EP-10T-2C"],
+        ["Current Plate", "CP-두께-Column-Groove-Design", "CP-3T-2C-2G-2L"],
+        ["Bipolar Plate", "BP-두께-Column-Groove-Design", "BP-1.5T-4C-4G-SQ"],
         ["Gasket", "GK-Design", "GK-2L"],
-        ["MEA", "MEA-업체-면적", "MEA-BNT-120"],
+        ["MEA", "MEA-업체-면적", "MEA-VNT-120"],
         ["PTL", "PTL-업체-두께-구조-[P]-[M]", "PTL-BEK-350-F-P-M"],
         ["GDL", "GDL-두께-[CS]", "GDL-350-CS"],
       ];
