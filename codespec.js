@@ -149,6 +149,7 @@
       this.init();
       this.renderBuilder();
       this.renderMatTables();
+      this._renderPartOptions();
       this.loadAssembly();
     },
 
@@ -171,6 +172,7 @@
       Storage.save();
       document.getElementById("cbNote").value = "";
       this.renderMatTables();
+      this._renderPartOptions();
       Utils.toast(`목록에 추가: ${dec.code}`);
     },
 
@@ -178,6 +180,7 @@
       Storage.state.materials = this.materials().filter((m) => m.id !== id);
       Storage.save();
       this.renderMatTables();
+      this._renderPartOptions();
     },
 
     /** 종류별 표 컬럼 정의 (specs 키 → 표시) */
@@ -331,24 +334,123 @@
       {k:"CCM",label:"CCM",free:true}, {k:"GDL",label:"GDL"},
     ],
 
+    /** 소재 코드 표에 등록된 항목 중 해당 부품 타입의 코드 <option> 목록 */
+    _partOptionsFor(key) {
+      return this.materials()
+        .filter((m) => m.type === key)
+        .map((m) => `<option value="${m.code}">${m.code}${m.desc ? " — " + m.desc : ""}</option>`)
+        .join("");
+    },
+
+    /** 조립 사양 부품 select 의 옵션을 소재 코드 표 기준으로 갱신 (선택값은 최대한 보존) */
+    _renderPartOptions() {
+      this.PARTS.forEach((p) => {
+        if (p.free) return;
+        const sel = document.querySelector(`select[data-part="${p.k}"]`);
+        if (!sel) return;
+        const cur = sel.value;
+        sel.innerHTML = `<option value="">(코드 선택)</option>${this._partOptionsFor(p.k)}<option value="__C">직접입력…</option>`;
+        const stillThere = [...sel.options].some((o) => o.value === cur);
+        if (cur && cur !== "__C" && !stillThere) {
+          // 등록 목록에서 사라진 코드 - 값을 잃지 않도록 직접입력으로 전환
+          const ci = document.querySelector(`[data-part="${p.k}__c"]`);
+          sel.value = "__C";
+          if (ci) { ci.hidden = false; ci.value = cur; }
+        } else if (stillThere) {
+          sel.value = cur;
+        }
+      });
+    },
+
+    /** 부품 select/직접입력 칸의 현재 코드 값 */
+    _partValue(key) {
+      const p = this.PARTS.find((x) => x.k === key);
+      if (!p) return "";
+      if (p.free) {
+        const inp = document.querySelector(`input[data-part="${key}"]`);
+        return inp ? inp.value.trim() : "";
+      }
+      const sel = document.querySelector(`select[data-part="${key}"]`);
+      if (!sel) return "";
+      if (sel.value === "__C") {
+        const ci = document.querySelector(`[data-part="${key}__c"]`);
+        return ci ? ci.value.trim().toUpperCase() : "";
+      }
+      return sel.value;
+    },
+
+    /** 부품 select/직접입력 칸에 값 채우기 (등록된 코드면 select, 아니면 직접입력으로) */
+    _setPartValue(key, value) {
+      const p = this.PARTS.find((x) => x.k === key);
+      if (!p) return;
+      if (p.free) {
+        const inp = document.querySelector(`input[data-part="${key}"]`);
+        if (inp) { inp.value = value || ""; inp.dispatchEvent(new Event("input", { bubbles: true })); }
+        return;
+      }
+      const sel = document.querySelector(`select[data-part="${key}"]`);
+      const ci = document.querySelector(`[data-part="${key}__c"]`);
+      if (!sel) return;
+      const val = (value || "").trim().toUpperCase();
+      if (!val) {
+        sel.value = "";
+        if (ci) { ci.value = ""; ci.hidden = true; }
+      } else if ([...sel.options].some((o) => o.value === val)) {
+        sel.value = val;
+        if (ci) { ci.value = ""; ci.hidden = true; }
+      } else {
+        sel.value = "__C";
+        if (ci) { ci.value = val; ci.hidden = false; }
+      }
+      sel.dispatchEvent(new Event("change", { bubbles: true }));
+    },
+
+    /** 부품 코드 해석 결과를 asm-decode 영역에 표시 */
+    _updatePartDecode(key) {
+      const p = this.PARTS.find((x) => x.k === key);
+      if (!p || p.free) return;
+      const val = this._partValue(key);
+      const dec = val ? parseCode(val) : { ok: false };
+      const el = document.querySelector(`[data-decode="${key}"]`);
+      if (el) { el.textContent = val ? (dec.ok ? "✓ " + dec.desc : "⚠ 형식 확인") : ""; el.className = "asm-decode " + (val ? (dec.ok ? "ok" : "warn") : ""); }
+    },
+
     _bindAssembly() {
-      // 부품 입력칸 생성
-      document.getElementById("asmParts").innerHTML = this.PARTS.map((p) => `
-        <div class="asm-part">
+      // 부품 입력칸 생성 (CCM 제외 - 소재 코드 표에 등록된 코드를 select, 없으면 직접입력)
+      document.getElementById("asmParts").innerHTML = this.PARTS.map((p) => {
+        if (p.free) {
+          return `<div class="asm-part">
+            <label>${p.label}</label>
+            <input type="text" data-part="${p.k}" placeholder="자유 입력" />
+          </div>`;
+        }
+        return `<div class="asm-part">
           <label>${p.label}</label>
-          <input type="text" data-part="${p.k}" placeholder="${p.free ? "자유 입력" : p.k + "-..."}" />
-          ${p.free ? "" : `<span class="asm-decode" data-decode="${p.k}"></span>`}
-        </div>`).join("");
-      // 코드 입력 → 해석 표시
+          <div class="combo-wrap">
+            <select data-part="${p.k}" data-combo="1">
+              <option value="">(코드 선택)</option>
+              ${this._partOptionsFor(p.k)}
+              <option value="__C">직접입력…</option>
+            </select>
+            <input type="text" data-part="${p.k}__c" class="combo-custom" placeholder="${p.k}-... 직접입력" hidden />
+          </div>
+          <span class="asm-decode" data-decode="${p.k}"></span>
+        </div>`;
+      }).join("");
+      // select 변경 → 직접입력 칸 토글 + 해석 표시
+      document.getElementById("asmParts").addEventListener("change", (e) => {
+        const sel = e.target.closest("select[data-part]");
+        if (!sel) return;
+        const key = sel.dataset.part;
+        const ci = document.querySelector(`[data-part="${key}__c"]`);
+        if (ci) { ci.hidden = sel.value !== "__C"; if (sel.value === "__C") ci.focus(); }
+        this._updatePartDecode(key);
+      });
+      // 직접입력 칸 타이핑 → 해석 표시
       document.getElementById("asmParts").addEventListener("input", (e) => {
         const inp = e.target.closest("input[data-part]");
         if (!inp) return;
-        const p = this.PARTS.find((x) => x.k === inp.dataset.part);
-        if (p && !p.free) {
-          const dec = parseCode(inp.value);
-          const el = document.querySelector(`[data-decode="${p.k}"]`);
-          if (el) { el.textContent = inp.value.trim() ? (dec.ok ? "✓ " + dec.desc : "⚠ 형식 확인") : ""; el.className = "asm-decode " + (inp.value.trim() ? (dec.ok ? "ok" : "warn") : ""); }
-        }
+        this._updatePartDecode(inp.dataset.part.replace(/__c$/, ""));
       });
 
       // 체결 조건 행 추가
@@ -376,7 +478,7 @@
     collect() {
       const g = (id) => document.getElementById(id).value.trim();
       const parts = {};
-      this.PARTS.forEach((p) => { parts[p.k] = document.querySelector(`input[data-part="${p.k}"]`).value.trim(); });
+      this.PARTS.forEach((p) => { parts[p.k] = this._partValue(p.k); });
       const fasten = [...document.querySelectorAll("#asmFastenBody tr")].map((tr) => {
         const o = {}; tr.querySelectorAll("input[data-f]").forEach((i) => o[i.dataset.f] = i.value.trim());
         return o;
@@ -394,10 +496,7 @@
       s("asmStackId", a.stackId); s("asmDate", a.date); s("asmArea", a.area); s("asmTargetT", a.targetT);
       s("asmCol", a.col); s("asmLayer", a.layer); s("asmCellTotal", a.cellTotal);
       s("asmNotes", a.notes);
-      this.PARTS.forEach((p) => {
-        const inp = document.querySelector(`input[data-part="${p.k}"]`);
-        if (inp) { inp.value = a.parts?.[p.k] || ""; inp.dispatchEvent(new Event("input", { bubbles: true })); }
-      });
+      this.PARTS.forEach((p) => { this._setPartValue(p.k, a.parts?.[p.k] || ""); });
       const tb = document.getElementById("asmFastenBody"); tb.innerHTML = "";
       (a.fasten && a.fasten.length ? a.fasten : [{},{},{}]).forEach((r) => this.addFastenRow(r));
     },
@@ -424,8 +523,8 @@
       s("asmTargetT", hint.targetText);
       s("asmCellTotal", hint.cellTotal ?? mea.conditions?.cellCount);
       s("asmLayer", hint.cellTotal ?? mea.conditions?.cellCount);
-      // 부품 코드 채우기 (있는 것만)
-      const setPart = (k, v) => { if (!v) return; const i = document.querySelector(`input[data-part="${k}"]`); i.value = v; i.dispatchEvent(new Event("input",{bubbles:true})); };
+      // 부품 코드 채우기 (있는 것만) - 소재 코드 표에 등록돼 있으면 select, 아니면 직접입력으로 채워짐
+      const setPart = (k, v) => { if (!v) return; this._setPartValue(k, v); };
       setPart("BP", hint.bpCode);
       setPart("GK", hint.gkCode);
       setPart("PTL", hint.ptlCode);

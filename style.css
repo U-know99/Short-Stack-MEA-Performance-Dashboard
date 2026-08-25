@@ -1516,6 +1516,13 @@ body {
   font-family: "Consolas","SFMono-Regular",monospace;
 }
 .asm-part input:focus { border-color: var(--primary); }
+.asm-part .combo-wrap { display: flex; flex-direction: column; gap: 4px; }
+.asm-part select {
+  padding: 7px 9px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg); color: var(--text); font-size: 0.85rem; outline: none;
+  font-family: "Consolas","SFMono-Regular",monospace; width: 100%;
+}
+.asm-part select:focus { border-color: var(--primary); }
 .asm-decode { font-size: 0.72rem; color: var(--text-sub); min-height: 14px; }
 .asm-decode.ok { color: var(--success); }
 .asm-decode.warn { color: var(--warning); }
